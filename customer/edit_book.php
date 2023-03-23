@@ -16,7 +16,7 @@ if (!isset($_SESSION["cusid"])) {
         </script>
     ';
 }
-if(isset($_GET['bookid'])){
+if (isset($_GET['bookid'])) {
     $bookid = $_GET['bookid'];
     $col = "book_name,book_cover,book_status,book_content,book_test,book_sumary,book_price";
     $table = "book";
@@ -43,24 +43,30 @@ if(isset($_GET['bookid'])){
     <div class="container">
         <br><br>
         <div class="row d-flex justify-content-center">
-         <?php
-          if($sqlbook->num_rows > 0){
-               $row = $sqlbook->fetch_assoc();
-          ?>
-            <div class="col-md-5 bg-light text-dark">
-                <br>
-                <div class="alert alert-primary h4 text-center mb-4 mt-4 " role="alert">
-                    แก้ไขหนังสือ
-                </div>
-                <form method="POST" action="update_book.php" enctype="multipart/form-data">
+            <?php
+            if ($sqlbook->num_rows > 0) {
+                $row = $sqlbook->fetch_assoc();
+            ?>
+                <div class="col-md-5 bg-light text-dark">
+                    <br>
+                    <div class="alert alert-primary h4 text-center mb-4 mt-4 " role="alert">
+                        แก้ไขหนังสือ
+                    </div>
+                    <form method="POST" action="update_book.php" enctype="multipart/form-data">
 
-                    <label>ชื่อหนังสือ</label>
-                    <input type="text" name="bid" class="form-control" required placeholder="name" hidden value="<?php echo $bookid ?>">
-                    <input type="text" name="bname" class="form-control" required placeholder="name" value="<?php echo $row['book_name'] ?>">
+                        <label>ชื่อหนังสือ</label>
+                        <input type="text" name="bid" class="form-control" required placeholder="name" hidden value="<?php echo $bookid ?>">
+                        <input type="text" name="bname" class="form-control" required placeholder="name" value="<?php echo $row['book_name'] ?>">
+                    
+                    <label>หน้าปก</label><br>
                     <?php
-          }
+                    //แสดงภาพจากฐานข้อมูล
                     ?>
-                    <label>หน้าปก</label>
+                    <img src="<?php echo $row['book_cover']; ?>" alt="Book Cover" width="150px">
+
+                    <?php
+                    //ใช้ input type file ในการอัพโหลดไฟล์ภาพใหม่
+                    ?>
                     <input type="file" name="file1" class="form-control" required>
                     <p class="text-danger">upload a JPEG, PNG</p>
                     <label>เนื้อหา</label>
@@ -71,19 +77,20 @@ if(isset($_GET['bookid'])){
                     <p class="text-danger">upload a PDF</p>
                     <label>หมวดหมู่</label><br>
                     <?php
+            }
                     //query typebook
                     $sqltypeid = select("type_id", "typebook");
                     $sqltypename = select("type_name", "typebook");
-                    $sqlbook_type = select_where("bt_typeid","book_type","bt_bookid='$bookid'");
+                    $sqlbook_type = select_where("bt_typeid", "book_type", "bt_bookid='$bookid'");
                     $typearr = array();
-                    while ($row = $sqltypeid->fetch_assoc()){
-                        $typearr[]=$row['type_id'];
+                    while ($row = $sqltypeid->fetch_assoc()) {
+                        $typearr[] = $row['type_id'];
                     }
                     $typeid = array();
                     while ($row2 = $sqlbook_type->fetch_assoc()) {
                         $typeid[] = $row2['bt_typeid'];
                     }
-                    foreach ($typearr as $value){
+                    foreach ($typearr as $value) {
                         // Check if the current value is in the database result
                         $row3 = $sqltypename->fetch_assoc();
                         $typename = $row3['type_name'];
@@ -99,20 +106,21 @@ if(isset($_GET['bookid'])){
                     $row4 = $sqlbooks->fetch_assoc();
                     ?>
                     <label>เรื่องย่อ</label>
-                    <textarea name="summary" class="form-control" required placeholder="summary"><?php echo $row4['book_sumary']?></textarea>
+                    <textarea name="summary" class="form-control" required placeholder="summary"><?php echo $row4['book_sumary'] ?></textarea>
                     <label>ราคา</label>
-                    <input type="number" name="price" class="form-control" required placeholder="price" value="<?php echo number_format($row4['book_price'],2)?>"><br>
-                    
+                    <input type="number" name="price" class="form-control" required placeholder="price" value="<?php echo number_format($row4['book_price'], 2) ?>"><br>
+
                     <div style="text-align: center;">
                         <input type="submit" class="btn btn-primary" name="submit" value="บันทึกข้อมูล">
                         <input type="reset" class="btn btn-danger" name="cancel" value="ยกเลิก"> <br><br>
                     </div>
-                </form>
-            </div>
+                    </form>
+                </div>
         </div>
     </div>
 </body>
 <?php
 connectdb()->close();
 ?>
+
 </html>
