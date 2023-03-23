@@ -17,12 +17,24 @@ connectdb();
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             หมวดหมู่
           </a>
+          <?php
+          $sqltypebook = "select *from typebook";
+          $result = connectdb()->query($sqltypebook);
+          ?>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
+            <?php
+            if ($result->num_rows > 0){
+              while ($row = $result->fetch_assoc()){
+  
+            ?>
+            <li><a class="dropdown-item" href="typebook_page.php?typeid=<?php echo $row['type_id']?>&typename=<?php echo $row['type_name']?>"><?php echo $row['type_name']?></a></li>
             <li>
-              <hr class="dropdown-divider">
+              <hr class="dropdown-divider"></hr>
             </li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <?php
+              }
+            }
+            ?>
           </ul>
         </li>
         <?php
