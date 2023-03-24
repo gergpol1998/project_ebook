@@ -42,7 +42,7 @@ if (!isset($_SESSION['cusid'])) {
                 <div>ผลงานของฉัน</div>
             </h2>
             <div class="d-flex justify-content-end">
-                <a class="btn btn-success mb-4 me-2" href="#" role="button">
+                <a class="btn btn-success mb-4 me-2" href="promotion.php" role="button">
                     <h4>+โปรโมชั่น</h4>
                 </a>
 

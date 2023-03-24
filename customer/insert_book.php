@@ -74,13 +74,13 @@ if (isset($_POST['submit'])) {
         // Check the file type
         $file_type2 = mime_content_type($file_tmp2);
         if ($file_type2 !== 'application/pdf') {
-            die('Error: Only PDF files are allowed.');
+            echo 'Error: Only PDF files are allowed.';
         }
 
         // Check the file type
         $file_type3 = mime_content_type($file_tmp3);
         if ($file_type3 !== 'application/pdf') {
-            die('Error: Only PDF files are allowed.');
+            echo 'Error: Only PDF files are allowed.';
         }
 
 
