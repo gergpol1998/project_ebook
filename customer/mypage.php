@@ -50,7 +50,7 @@ session_start();
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
-                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price'], 2) ?></h5>
+                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price']-$row['pro_discount'], 2) ?></h5>
                             <h5 class="card-title text-center">ผู้เผยแพร่</h5>
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_penname'] ?></h5>
                             <?php
@@ -91,7 +91,7 @@ session_start();
                                                     
                                                 
                                                 ?>
-                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
                                                 <?php
                                                 }
                                             }
@@ -162,13 +162,13 @@ session_start();
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
-                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . "</h4>";
+                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price']-$row['pro_discount'], 2) . "</h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
                                             echo "<p>" . $row['book_sumary'] . "</p>";
                                             echo "<h5>ผู้เผยแพร่</h5>";
                                             echo "<h4>" . $row['pub_penname'] . "</h4>";
                                             echo "<a href='testread.php?bookid=".$row['book_id']."'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
-                                            echo "<a href='mypage.php?pubid=".$row['book_pubid']."'><button class='btn btn-success'>หน้าร้าน</button></a>";
+                                        
                                             ?>
                                         </div>
                                         <div class="modal-footer">
@@ -332,7 +332,7 @@ session_start();
                                             echo "<h5>ผู้เผยแพร่</h5>";
                                             echo "<h4>" . $row['pub_penname'] . "</h4>";
                                             echo "<a href='testread.php?bookid=".$row['book_id']."'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
-                                            echo "<a href='mypage.php?pubid=".$row['book_pubid']."'><button class='btn btn-success'>หน้าร้าน</button></a>";
+                                            
                                             ?>
                                         </div>
                                         <div class="modal-footer">
