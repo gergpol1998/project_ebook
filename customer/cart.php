@@ -62,7 +62,7 @@ if (!isset($_SESSION['cusid'])) {
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
 
-                        ?>
+                            ?>
                                 <tr>
                                     <td>
                                         <?php echo $i; ?>
@@ -79,10 +79,10 @@ if (!isset($_SESSION['cusid'])) {
                                     </td>
                                     <script>
                                         function canclebook(cancle) {
-                                        let agreecancle = confirm("ต้องการลบ");
+                                            let agreecancle = confirm("ต้องการลบ");
                                             if (agreecancle) {
                                                 window.location = cancle;
-                                            }   
+                                            }
                                         }
                                     </script>
                                     <td>
@@ -92,24 +92,47 @@ if (!isset($_SESSION['cusid'])) {
                                     </td>
 
                                 </tr>
-                        <?php
+                                <?php
                                 $i++;
                                 $total += $row['book_price'];
-                            }
-                        }
-                        ?>
-                    </tbody>
-                    <tr>
-                        <td class="text-end" colspan="4" id="nn">ราคารวมสุทธิ</td>
-                        <td class="text-center"><b class="text-danger">
-                                <?php echo number_format($total, 2) ?>
-                            </b></td>
-                        <td>เหรียญ</td>
-                    </tr>
-                    <tr>
+
+                                ?>
+                        </tbody>
+                        <tr>
+                            <td class="text-end" colspan="4" id="nn">ราคารวมสุทธิ</td>
+                            <td class="text-center"><b class="text-danger">
+                                    <?php echo number_format($total, 2) ?>
+                                </b></td>
+                            <td>เหรียญ</td>
+                        </tr>
+                        <tr>
                         <td class="text-end" colspan="4"><a href='index.php'><button type='button' class="btn btn-outline-secondary">เลือกสินค้า</button></a></td>
+                            <?php
+                                $sqlcus = select_where("cus_coin", "customer", "cus_id = '$cusid'");
+                                if ($sqlcus->num_rows > 0) {
+                                    $row2 = $sqlcus->fetch_assoc();
+                                    if ($row2['cus_coin'] < $row['book_price']) {
+                                        echo '<script>
+                                            function checkcoin(mycoin) {
+                                                let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
+                                                if (conf) {
+                                                    window.location = mycoin;
+                                                }
+                                            }
+                                        </script>';
+                                       
+                                        echo "<td class='text-center'><a <a onclick='checkcoin(this.href); return false;' href='add_coin.php'><button type='button' class='btn btn-primary'>ชำระเงิน</button></a></td>";
+                                    } else {
+                                        $_SESSION['coin'] = $row2['cus_coin'];
+                            ?>
                         <td class="text-center"><a href='insert_receipt.php'><button type='button' class="btn btn-primary">ชำระเงิน</button></a></td>
-                        <td><a href='cancle_cart.php?act=cancle'><button type='button' class='btn btn-danger'>ยกเลิกสินค้า</button></a></td>
+                <?php
+                    }
+                }
+            }
+                                    }
+                ?>
+                <td><a href='cancle_cart.php?act=cancle'><button type='button' class='btn btn-danger'>ยกเลิกสินค้า</button></a></td>
                     </tr>
                 </table>
             </div>

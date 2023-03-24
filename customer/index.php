@@ -52,31 +52,54 @@ session_start();
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_penname'] ?></h5>
                             <?php
                             if (isset($cusid)) {
+                                
                                 $sqlcus = select_where("cus_coin", "customer", "cus_id = '$cusid'");
                                 if ($sqlcus->num_rows > 0) {
                                     $row2 = $sqlcus->fetch_assoc();
 
-                                    if ($row2['cus_coin'] < $row['book_price']) {
-                                        echo '<script>
-                                                    function checkcoin(mycoin) {
-                                                        let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
-                                                        if (conf) {
-                                                            window.location = mycoin;
-                                                        }
-                                                    }
-                                                </script>';
-                                        echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
-                                    } else {
-
-                            ?>
-                                        <a href="#" class="btn btn-danger mb-2">ชำระเงิน</a>
-                                <?php
-                                    }
-                                }
+                                    $sqlcheck = select_where("*", "bookshelf", "bs_uid = '$cusid' and bs_bookid = '" . $row['book_id'] . "' and bs_status = '2'");
+                                        if ($sqlcheck->num_rows > 0){
+                                            echo '<button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>';
+                                            
+                                        }
+                                        else{
+                                            if ($row2['cus_coin'] < $row['book_price']) {
+                                                echo '<script>
+                                                            function checkcoin(mycoin) {
+                                                                let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
+                                                                if (conf) {
+                                                                    window.location = mycoin;
+                                                                }
+                                                            }
+                                                        </script>';
+                                                echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
+        
+                                                
+                                            } 
+                                            else {
+                                                $_SESSION['coin'] = $row2['cus_coin'];
+                                                $sqlcheck = select_where("*", "bookshelf", "bs_uid = '$cusid' and bs_bookid = '" . $row['book_id'] . "' and bs_status = '2'");
+                                                if ($sqlcheck->num_rows > 0){
+                                    ?>          
+                                                <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
+                                        <?php
+                                                }
+                                                else{
+                                                    
+                                                
+                                                ?>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <?php
+                                                }
+                                            }
+                                        }
+                                        }
+                                    
                                 ?>
                                 <?php
+                                $sql = select_where("*", "bookshelf", "bs_uid = '$cusid' and bs_bookid = '" . $row['book_id'] . "' and bs_status = '2'");
                                 $sqlcart = select_where("*", "carts", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                if ($sqlcart->num_rows > 0) {
+                                if ($sql->num_rows > 0 || $sqlcart->num_rows > 0) {
 
                                 ?>
                                     <button class="btn btn-primary mb-2" disabled>เพิ่มเข้าตะกร้า</button>
@@ -167,13 +190,21 @@ session_start();
             $sqlbook = select_where($col, $table, $where);
             if ($sqlbook->num_rows > 0) {
                 while ($row = $sqlbook->fetch_assoc()) {
-                    
+                    $bookdate = $row['book_dateapp'];
+                    $passdate = strtotime("+4 days", strtotime($bookdate)); // วันหมดอายุ
+                    $currentdate = time(); // วันที่ปัจจุบัน
             ?>
                     <div class="col sm-3">
                         <div class="text-center mb-3">
                             <img src="<?php echo $row['book_cover'] ?>" class="card-img-top" width="200px" height="250px">
 
-                            
+                            <?php
+                            if ($currentdate <= $passdate) {
+                                echo "<h6 class='card-title text-center text-danger'>NEW</h6>";
+                            } else {
+                                echo "";
+                            }
+                            ?>
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
@@ -182,31 +213,53 @@ session_start();
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_penname'] ?></h5>
                             <?php
                             if (isset($cusid)) {
+                                
                                 $sqlcus = select_where("cus_coin", "customer", "cus_id = '$cusid'");
                                 if ($sqlcus->num_rows > 0) {
                                     $row2 = $sqlcus->fetch_assoc();
 
-                                    if ($row2['cus_coin'] < $row['book_price']) {
-                                        echo '<script>
-                                                    function checkcoin(mycoin) {
-                                                        let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
-                                                        if (conf) {
-                                                            window.location = mycoin;
-                                                        }
-                                                    }
-                                                </script>';
-                                        echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
-                                    } else {
-
-                            ?>
-                                        <a href="#" class="btn btn-danger mb-2">ชำระเงิน</a>
-                                <?php
-                                    }
-                                }
+                                    $sqlcheck = select_where("*", "bookshelf", "bs_uid = '$cusid' and bs_bookid = '" . $row['book_id'] . "' and bs_status = '2'");
+                                        if ($sqlcheck->num_rows > 0){
+                                            echo '<button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>';
+                                            
+                                        }
+                                        else{
+                                            if ($row2['cus_coin'] < $row['book_price']) {
+                                                echo '<script>
+                                                            function checkcoin(mycoin) {
+                                                                let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
+                                                                if (conf) {
+                                                                    window.location = mycoin;
+                                                                }
+                                                            }
+                                                        </script>';
+                                                echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
+        
+                                                
+                                            } 
+                                            else {
+                                                $sqlcheck = select_where("*", "bookshelf", "bs_uid = '$cusid' and bs_bookid = '" . $row['book_id'] . "' and bs_status = '2'");
+                                                if ($sqlcheck->num_rows > 0){
+                                    ?>          
+                                                <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
+                                        <?php
+                                                }
+                                                else{
+                                                    
+                                                
+                                                ?>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <?php
+                                                }
+                                            }
+                                        }
+                                        }
+                                    
                                 ?>
                                 <?php
+                                $sql = select_where("*", "bookshelf", "bs_uid = '$cusid' and bs_bookid = '" . $row['book_id'] . "' and bs_status = '2'");
                                 $sqlcart = select_where("*", "carts", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                if ($sqlcart->num_rows > 0) {
+                                if ($sql->num_rows > 0 || $sqlcart->num_rows > 0) {
 
                                 ?>
                                     <button class="btn btn-primary mb-2" disabled>เพิ่มเข้าตะกร้า</button>
@@ -289,7 +342,6 @@ session_start();
             connectdb()->close();
             ?>
         </div>
-    </div>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
