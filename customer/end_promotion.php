@@ -81,7 +81,7 @@ if (!isset($_SESSION['cusid'])) {
                         $sqlpro = "select pro_id,book_id,pro_name,pro_discount,pro_sdate,pro_edate,book_name 
                         from promotion inner join book_promotion on pro_id = bp_proid
                         inner join book on bp_bookid = book_id
-                        where pro_pubid = '$pubid'and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
+                        where pro_pubid = '$pubid'and pro_edate < CURDATE()+ INTERVAL 1 DAY";
                         $result = connectdb()->query($sqlpro);
 
                         if ($result->num_rows > 0) {
