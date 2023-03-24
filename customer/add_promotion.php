@@ -15,6 +15,9 @@ if (!isset($_SESSION["cusid"])) {
         </script>
     ';
 }
+else{
+    $cusid = $_SESSION['cusid'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +54,7 @@ if (!isset($_SESSION["cusid"])) {
                     <label>เลือกหนังสือ</label><br>
                     <?php
                     //query typebook
-                    $result = select("book_id,book_name", "book");
+                    $result = select_where("book_id,book_name", "book","book_pubid = '$cusid'");
                     while ($row = $result->fetch_assoc()) {
                     ?>
                         <input type="checkbox" name="book[]" value="<?= $row['book_id'] ?>">
