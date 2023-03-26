@@ -2,7 +2,7 @@
 include "function.php";
 connectdb();
 session_start();
-$pub_id = $_SESSION["cusid"];
+$cusid = $_SESSION["cusid"];
 
 echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js' 
 </script>
@@ -15,8 +15,8 @@ $total = 0;
 $bookarr = array();
 $coin = $_SESSION['coin'];
 
-$sqlcart = "select * from carts inner join book on book_id = cart_bookid
-where cart_cusid = '$pub_id'";
+$sqlcart = "select * from cart inner join book on book_id = cart_bookid
+where cart_cusid = '$cusid'";
 $result = connectdb()->query($sqlcart);
 
 if ($result->num_rows > 0) {
@@ -27,19 +27,19 @@ if ($result->num_rows > 0) {
         $total += $row['book_price'];
     }
     $newcoin -= $total;
-    $sqlupcoin = "update customer set cus_coin = '$newcoin' where cus_id = '$pub_id'";
+    $sqlupcoin = "update customer set cus_coin = '$newcoin' where cus_id = '$cusid'";
     $excoin = connectdb()->query($sqlupcoin);
 
     //query lastid
-    $lastreceiptid = autoid('R#', 'rec_id', 'receipts', '00001');
+    $lastreceiptid = receiptautoid();
 
-    $sqlins_receipt = "insert into receipts (rec_id,rec_date,rec_total,rec_cusid)
-            values ('$lastreceiptid',NOW(),'$total','$pub_id')";
-            $result3 = connectdb()->query($sqlins_receipt);
+    $sqlins_receipt = "insert into receipt (rec_id,rec_total,rec_date,rec_cusid)
+    values ('$lastreceiptid','$total',NOW(),'$cusid')";
+    $result3 = connectdb()->query($sqlins_receipt);
 
     foreach ($bookarr as $bookid) {
         $sqlbook_shelf = "select * from bookshelf
-        where bs_bookid = '$bookid' and bs_uid = '$pub_id' and bs_status = '1'";
+        where bshelf_bookid = '$bookid' and bshelf_cusid = '$cusid' and bshelf_status = '0'";
         $result2 = connectdb()->query($sqlbook_shelf);
         if ($result2->num_rows > 0) {
             $i++;
@@ -48,22 +48,22 @@ if ($result->num_rows > 0) {
                 die(mysqli_error(connectdb()));
             } 
             else {
-                $sqlins_detail = "insert into receipts_detail (rec_no,recd_recid,rec_bookid,rec_proid)
+                $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid,recd_proid)
                 values ('$i','$lastreceiptid','$bookid',NULL)";
                 $result4 = connectdb()->query($sqlins_detail);
 
                 if (!$result4) {
                     die(mysqli_error(connectdb()));
                 } else {
-                    $sqlupdate_shelf = "update bookshelf set bs_status = '2' 
-                    where bs_bookid = '$bookid' and bs_uid = '$pub_id'";
+                    $sqlupdate_shelf = "update bookshelf set bshelf_status = '1' 
+                    where bshelf_bookid = '$bookid' and bshelf_cusid = '$cusid'";
                     $result5 = connectdb()->query($sqlupdate_shelf);
 
                     if (!$result5) {
                         die(mysqli_error(connectdb()));
                     } 
                     else {
-                        $sqldel_cart = "delete from carts where cart_cusid = '$pub_id'";
+                        $sqldel_cart = "delete from cart where cart_cusid = '$cusid'";
                         $result6 = connectdb()->query($sqldel_cart);
 
                         if (!$result6) {
@@ -81,8 +81,8 @@ if ($result->num_rows > 0) {
             }
         }
         else{
-            $sqlinsert_shelf = "insert into bookshelf (bs_bookid,bs_uid,bs_status)
-            values ('$bookid','$pub_id','1')";
+            $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status)
+            values ('$bookid','$cusid','0')";
             $result = connectdb()->query($sqlinsert_shelf);
             if (!$result){
                 die(mysqli_error(connectdb()));
@@ -94,22 +94,22 @@ if ($result->num_rows > 0) {
                     die(mysqli_error(connectdb()));
                 } 
                 else {
-                    $sqlins_detail = "insert into receipts_detail (rec_no,recd_recid,rec_bookid,rec_proid)
+                    $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,rec_bookid,rec_proid)
                     values ('$i','$lastreceiptid','$bookid',NULL)";
                     $result3 = connectdb()->query($sqlins_detail);
 
                     if (!$result3) {
                         die(mysqli_error(connectdb()));
                     } else {
-                        $sqlupdate_shelf = "update bookshelf set bs_status = '2' 
-                        where bs_bookid = '$bookid' and bs_uid = '$pub_id'";
+                        $sqlupdate_shelf = "update bookshelf set bshelf_status = '1' 
+                        where bshelf_bookid = '$bookid' and bshelf_cusid = '$cusid'";
                         $result4 = connectdb()->query($sqlupdate_shelf);
 
                         if (!$result4) {
                             die(mysqli_error(connectdb()));
                         } 
                         else {
-                            $sqldel_cart = "delete from carts where cart_cusid = '$pub_id'";
+                            $sqldel_cart = "delete from cart where cart_cusid = '$cusid'";
                             $result5 = connectdb()->query($sqldel_cart);
                             // ตรวจสอบว่ามี session ที่เก็บอยู่หรือไม่
                             if (isset($_SESSION['coin'])) {

@@ -14,7 +14,7 @@ if (!isset($_SESSION['cusid'])) {
         </script>
         ';
 } else {
-    $pubid = $_SESSION['cusid'];
+    $cusid = $_SESSION['cusid'];
 }
 ?>
 <!DOCTYPE html>
@@ -78,51 +78,62 @@ if (!isset($_SESSION['cusid'])) {
                     </thead>
                     <tbody>
                         <?php
-                        $sqlpro = "select pro_id,book_id,pro_name,pro_discount,pro_sdate,pro_edate,book_name 
-                        from promotion inner join book_promotion on pro_id = bp_proid
-                        inner join book on bp_bookid = book_id
-                        where pro_pubid = '$pubid'and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
-                        $result = connectdb()->query($sqlpro);
+                        $sqlpub = "select pub_id from publisher inner join customer on pub_cusid = cus_id
+                        where pub_cusid = '$cusid'";
+                        $ex_pub = connectdb()->query($sqlpub);
+                        if ($ex_pub->num_rows > 0){
+                            $row = $ex_pub->fetch_assoc();
+                            $pubid = $row['pub_id'];
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                                
-                        ?>
-                                <tr>
-                                    <td>
-                                        <?php echo $row['pro_name']; ?>
-                                    </td>
-                                    <td><?php echo $row['pro_discount']?></td>
-                                    <td>
-                                        <?= $row['pro_sdate'] ?>
-                                    </td>
-                                    <td>
-                                        <?= $row['pro_edate'] ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $row['book_name']?>
-                                    </td>
-                                    <td>
-                                    <a href="edit_promotion.php?proid=<?php echo $row['pro_id'] ?>&bookid=<?php echo $row['book_id']?>"><button type='button' class='btn btn-warning'>แก้ไข</button></a>
-                                    </td>
-                                    <script>
-                                        function canclebook(cancle) {
-                                        let agreecancle = confirm("ต้องการลบ");
-                                            if (agreecancle) {
-                                                window.location = cancle;
-                                            }   
-                                        }
-                                    </script>
-                                    <td>
-
-                                        <a onclick="canclebook(this.href); return false;" href="remove_promotion.php?proid=<?php echo $row['pro_id']?>&bookid=<?php echo $row['book_id']?>"><button type='button' class='btn btn-danger'>ลบ</button></a>
-
-                                    </td>
-
-                                </tr>
-                        <?php
-                            }
+                            $sqlpro = "select * 
+                            from promotion inner join bookpro on pro_id = bpro_proid
+                            inner join book on bpro_bookid = book_id
+                            where pro_pubid = '$pubid'and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
+                            $result = connectdb()->query($sqlpro);
                         }
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    
+                            ?>
+                                    <tr>
+                                        <td>
+                                            <?php echo $row['pro_name']; ?>
+                                        </td>
+                                        <td><?php echo $row['pro_discount']?></td>
+                                        <td>
+                                            <?= $row['pro_sdate'] ?>
+                                        </td>
+                                        <td>
+                                            <?= $row['pro_edate'] ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['book_name']?>
+                                        </td>
+                                        <td>
+                                        <a href="edit_promotion.php?proid=<?php echo $row['pro_id'] ?>&bookid=<?php echo $row['book_id']?>"><button type='button' class='btn btn-warning'>แก้ไข</button></a>
+                                        </td>
+                                        <script>
+                                            function canclebook(cancle) {
+                                            let agreecancle = confirm("ต้องการลบ");
+                                                if (agreecancle) {
+                                                    window.location = cancle;
+                                                }   
+                                            }
+                                        </script>
+                                        <td>
+
+                                            <a onclick="canclebook(this.href); return false;" href="remove_promotion.php?proid=<?php echo $row['pro_id']?>&bookid=<?php echo $row['book_id']?>"><button type='button' class='btn btn-danger'>ลบ</button></a>
+
+                                        </td>
+
+                                    </tr>
+                            <?php
+                                }
+                            }
+                            else{
+                                echo "<h4 class='text-success'>ไม่มีโปรโมชั่น</h4>";
+                            }
                         ?>
                     </tbody>
                 </table>

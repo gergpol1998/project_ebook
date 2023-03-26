@@ -14,8 +14,8 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
     $bookid = $_GET['bookid'];
     $cusid = $_SESSION['cusid'];
 
-    $sqlinsert_shelf = "insert into bookshelf (bs_bookid,bs_uid,bs_status)
-        values ('$bookid','$cusid','1')";
+    $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status)
+        values ('$bookid','$cusid','0')";
         $result = connectdb()->query($sqlinsert_shelf);
 
         if ($result) {

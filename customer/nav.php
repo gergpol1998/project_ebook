@@ -41,7 +41,7 @@ connectdb();
         if(isset($_SESSION['cusid']) && isset($_SESSION['cusname'])){
           $cusid = $_SESSION['cusid'];
           $cusname = $_SESSION['cusname'];
-          $result = select_where("pub_id","publisher","pub_id = '$cusid'");
+          $result = select_where("pub_id","publisher","pub_cusid = '$cusid'");
         }
         if(isset($cusid)){
         ?>
@@ -127,7 +127,7 @@ connectdb();
       </ul>
     <ul class="navbar-nav ms-auto">
       <?php
-          $sql_cart = select_where("count(cart_bookid) as countbook","carts","cart_cusid = '$cusid'");
+          $sql_cart = select_where("count(cart_bookid) as countbook","cart","cart_cusid = '$cusid'");
           if ($sql_cart->num_rows > 0){
             $row = $sql_cart->fetch_assoc();
 

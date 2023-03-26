@@ -23,7 +23,7 @@ if (isset($_GET['bookid']) && isset($_REQUEST['act'])){
     $act = $_REQUEST['act'];
     $bookid = $_GET['bookid'];
     if ($act == 'remove') {
-        $sqldel_cart = "delete from carts where cart_cusid = '$cusid' and cart_bookid = '$bookid'";
+        $sqldel_cart = "delete from cart where cart_cusid = '$cusid' and cart_bookid = '$bookid'";
         $result = connectdb()->query($sqldel_cart);
         if (!$result){
             die(mysqli_error(connectdb()));

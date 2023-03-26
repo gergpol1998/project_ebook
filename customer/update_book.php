@@ -91,7 +91,7 @@ if($_POST['submit']){
             
             // update the new file path into the database
             $col = "book_id = '$bookid',book_name='$bookname',book_cover = '$file_destination1',book_content = '$file_destination2'
-            ,book_test = '$file_destination3',book_sumary = '$summary',book_price = '$price'";
+            ,book_test = '$file_destination3',book_summary = '$summary',book_price = '$price'";
             
             $where = "book_id = '$bookid'";
             $result = updatedata("book",$col,$where);
@@ -104,22 +104,14 @@ if($_POST['submit']){
         die(mysqli_error(connectdb()));
     } else {
         foreach ($type_book as $type_books) {
-            $result2 = deletedata("book_type","bt_bookid = '$bookid'");
+            $result2 = deletedata("book_type","btype_bookid = '$bookid'");
         }
         foreach($type_book as $type_books) {
-            $col_type = "bt_bookid,bt_typeid";
+            $col_type = "btype_bookid,btype_typeid";
             $values_type = "'$bookid','$type_books'";
             $result3 = insertdata("book_type",$col_type,$values_type);
         }
         if (!isset($result3)) {
-            die(mysqli_error(connectdb()));
-        }
-        else{
-            foreach ($type_book as $type_books) {
-                $result4 = deletedata("tag_book","tb_bookid = '$bookid'");
-            }
-        }
-        if (!isset($result4)){
             die(mysqli_error(connectdb()));
         }
         else{
@@ -129,6 +121,7 @@ if($_POST['submit']){
             </script>
                 ';
         }
+        
     }
 }
 ?>

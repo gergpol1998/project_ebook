@@ -15,6 +15,7 @@ if($_POST['submit']){
     $discount = $_POST['discount'];
     $sdate = $_POST['sdate'];
     $edate = $_POST['edate'];
+    $book = $_POST['book'];
 
     $sqlupdate_pro = "update promotion set pro_name = '$proname',pro_discount = '$discount',
     pro_sdate = '$sdate',pro_edate = '$edate'
@@ -24,11 +25,30 @@ if($_POST['submit']){
         die(mysqli_error(connectdb()));
     } 
     else {
-        echo '
-            <script>
-                sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","promotion.php");
-            </script>
+        foreach ($book as $books){
+            $sqldel_bookpro = "delete from bookpro where bpro_bookid = '$books' and bpro_proid = '$proid'";
+            $result2 = connectdb()->query($sqldel_bookpro);
+        
+            if(!$result2){
+                die(mysqli_error(connectdb()));
+            }
+            else{
+                $sqlins_bookpro = "insert into bookpro (bpro_bookid ,bpro_proid)
+                values ('$books','$proid')";
+                $result3 = connectdb()->query($sqlins_bookpro);
+                if(!$result3){
+                    die(mysqli_error(connectdb()));
+                }
+                else{
+                    echo '
+                <script>
+                    sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","promotion.php");
+                </script>
                 ';
+                }
+            }
+        }
+        
     }
 }
 ?>

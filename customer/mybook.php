@@ -44,10 +44,10 @@ if (!isset($_SESSION['cusid'])) {
             <a href="mybook.php"><button type="button" class="btn btn-outline-success">เป็นเจ้าของ</button></a>
         </div>
         <?php
-            $sqlbook = "select book_id,book_name,book_cover,book_content,book_sumary,book_price,pub_penname 
+            $sqlbook = "select *
             from book inner join publisher on pub_id = book_pubid
-            inner join bookshelf on book_id = bs_bookid
-            where bs_uid = '$cusid' and book_status = '3' and bs_status = '2'";
+            inner join bookshelf on book_id = bshelf_bookid
+            where bshelf_cusid = '$cusid' and book_status = '2' and bshelf_status = '1'";
             $result = connectdb()->query($sqlbook);
         ?>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
@@ -64,7 +64,7 @@ if (!isset($_SESSION['cusid'])) {
                     echo "<h5>ราคา</h5>";
                     echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)."</h4>";
                     echo "<h5>ผู้เผยแพร่</h5>";
-                    echo "<h4>".$row['pub_penname']."</h4>";
+                    echo "<h4>".$row['pub_name']."</h4>";
                 ?>
                 <!-- Button trigger modal -->
                 <a href='readbook.php?bookid=<?php echo $row['book_id']?>'><button class='btn btn-danger'>อ่าน</button></a>
@@ -85,9 +85,9 @@ if (!isset($_SESSION['cusid'])) {
                             echo "<h5>ราคา</h5>";
                             echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)."</h4>";
                             echo "<h5>เนื้อเรื่องย่อ</h5>";
-                            echo "<p>".$row['book_sumary']."</p>";
+                            echo "<p>".$row['book_summary']."</p>";
                             echo "<h5>ผู้เผยแพร่</h5>";
-                            echo "<h4>".$row['pub_penname']."</h4>";
+                            echo "<h4>".$row['pub_name']."</h4>";
                         ?>
                     </div>
                     <div class="modal-footer">

@@ -56,8 +56,8 @@ if (!isset($_SESSION['cusid'])) {
                         $i = 1;
                         $total = 0;
 
-                        $sqlcart = "select *from book inner join carts on book_id = cart_bookid
-                            where book_status = '3' and cart_cusid = '$cusid'";
+                        $sqlcart = "select *from book inner join cart on book_id = cart_bookid
+                            where book_status = '2' and cart_cusid = '$cusid'";
                         $result = connectdb()->query($sqlcart);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -112,8 +112,17 @@ if (!isset($_SESSION['cusid'])) {
                             <td class="text-end" colspan="4"><a href='index.php'><button type='button' class="btn btn-outline-secondary">เลือกสินค้า</button></a></td>
                                 <?php
                                     $sqlcus = select_where("cus_coin", "customer", "cus_id = '$cusid'");
-                                    $sqlprice = "select book_price from book where book_pubid = '$cusid'";
-                                    $ex_price = connectdb()->query($sqlprice);
+                                    $sqlpub = "select pub_id from publisher inner join customer on pub_cusid = cus_id
+                                    where pub_cusid = '$cusid'";
+                                    $ex_pub = connectdb()->query($sqlpub);
+                                    if ($ex_pub->num_rows > 0){
+                                        $row3 = $ex_pub->fetch_assoc();
+                                        $pubid = $row3['pub_id'];
+
+                                        $sqlprice = "select book_price from book where book_pubid = '$pubid'";
+                                        $ex_price = connectdb()->query($sqlprice);
+                                    }
+                                    
                                     if ($sqlcus->num_rows > 0 && $ex_price->num_rows > 0) {
                                         $row= $ex_price->fetch_assoc();
                                         $row2 = $sqlcus->fetch_assoc();

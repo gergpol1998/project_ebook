@@ -15,50 +15,30 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
     $cusid = $_SESSION['cusid'];
 
     $sqlbook_shelf = "select * from bookshelf
-    where bs_bookid = '$bookid' and bs_uid = '$cusid' and bs_status = '1'";
+    where bshelf_bookid = '$bookid' and bshelf_cusid = '$cusid' and bshelf_status = '0'";
     $result = connectdb()->query($sqlbook_shelf);
 
     if($result->num_rows > 0){
-        $result2 = insertdata("carts","cart_bookid,cart_cusid","'$bookid','$cusid'");
+        $result2 = insertdata("cart","cart_bookid,cart_cusid","'$bookid','$cusid'");
 
         if ($result2) {
-            echo '
-                <script>
-                    sweetalerts("เพิ่มเข้าตะกร้าเรียบร้อย!!","success","","index.php");
-                </script>
-                ';
-        } else {
-            echo '
-                <script>
-                    sweetalerts("ไม่สามารถพิ่มเข้าตะกร้าได้!!","warning","","index.php");
-                </script>
-                ';
-        }
+            header("location:index.php");
+        } 
     }
     else{
-        $sqlinsert_shelf = "insert into bookshelf (bs_bookid,bs_uid,bs_status)
-        values ('$bookid','$cusid','1')";
+        $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status)
+        values ('$bookid','$cusid','0')";
         $result3 = connectdb()->query($sqlinsert_shelf);
         
         if (!isset($result3)) {
             die(mysqli_error(connectdb()));
         }
         else{
-            $result4 = insertdata("carts","cart_bookid,cart_cusid","'$bookid','$cusid'");
+            $result4 = insertdata("cart","cart_bookid,cart_cusid","'$bookid','$cusid'");
 
-        if ($result4) {
-            echo '
-                <script>
-                    sweetalerts("เพิ่มเข้าตะกร้าเรียบร้อย!!","success","","index.php");
-                </script>
-                ';
-        } else {
-            echo '
-                <script>
-                    sweetalerts("ไม่สามารถพิ่มเข้าตะกร้าได้!!","warning","","index.php");
-                </script>
-                ';
-        }
+            if ($result4) {
+                header("location:index.php");
+            } 
         }
     }
     

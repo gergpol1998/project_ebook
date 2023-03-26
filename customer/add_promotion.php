@@ -17,6 +17,14 @@ if (!isset($_SESSION["cusid"])) {
 }
 else{
     $cusid = $_SESSION['cusid'];
+    $sqlpub = "select pub_id from publisher inner join customer on pub_cusid = cus_id
+    where pub_cusid = '$cusid'";
+    $ex_pub = connectdb()->query($sqlpub);
+    if ($ex_pub->num_rows > 0){
+        $row = $ex_pub->fetch_assoc();
+        $pubid = $row['pub_id'];
+        
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -53,8 +61,8 @@ else{
                     <input type="date" name="edate" class="form-control" required>
                     <label>เลือกหนังสือ</label><br>
                     <?php
-                    //query typebook
-                    $result = select_where("book_id,book_name", "book","book_pubid = '$cusid'");
+                    //query book
+                    $result = select_where("*", "book","book_status = '2' and book_pubid = '$pubid'");
                     while ($row = $result->fetch_assoc()) {
                     ?>
                         <input type="checkbox" name="book[]" value="<?= $row['book_id'] ?>">

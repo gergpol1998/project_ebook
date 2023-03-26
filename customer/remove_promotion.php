@@ -8,7 +8,7 @@ echo "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/sweeta
 
 echo "<script src='function.js'></script>";
 
-if (isset($_GET['proid']) && isset($_GET['bookid'])) {
+if (isset($_GET['proid'])) {
     $proid = $_GET['proid'];
     $bookid = $_GET['bookid'];
 
@@ -17,16 +17,16 @@ if (isset($_GET['proid']) && isset($_GET['bookid'])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
 
-        $sqlselbookpro = "select bp_bookid from book_promotion where bp_bookid = '$bookid'";
+        $sqlselbookpro = "select bpro_bookid from bookpro where bpro_bookid = '$bookid'";
         $result2 = connectdb()->query($sqlselbookpro);
         if ($result2->num_rows > 0) {
             $row2 = $result2->fetch_assoc();
-            if ($row['book_id'] === $row2['bp_bookid']) {
-                $sqldel_bookpro = "delete from book_promotion where bp_bookid = '$bookid' and bp_proid = '$proid'";
+            if ($row['book_id'] === $row2['bpro_bookid']) {
+                $sqldel_bookpro = "delete from bookpro where bpro_bookid = '$bookid' and bpro_proid = '$proid'";
                 $result3 = connectdb()->query($sqldel_bookpro);
 
                 $sqlselpro = "SELECT pro_id FROM promotion
-                inner join book_promotion on pro_id = bp_proid and pro_id = '$proid'";
+                inner join bookpro on pro_id = bpro_proid and pro_id = '$proid'";
                 $result4 = connectdb()->query($sqlselpro);
                 if ($result4->num_rows > 0) {
                         echo '

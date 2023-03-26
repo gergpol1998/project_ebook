@@ -11,7 +11,7 @@ echo "<script src='function.js'></script>";
 
 if(isset($_GET['bookid'])){
     $bookid = $_GET['bookid'];
-    $result = deletedata("bookshelf","bs_bookid = '$bookid'");
+    $result = deletedata("bookshelf","bshelf_bookid = '$bookid'");
     if (!$result) {
         die(mysqli_error(connectdb()));
     } 

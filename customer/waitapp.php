@@ -14,7 +14,7 @@ if (!isset($_SESSION['cusid'])) {
         </script>
         ';
 } else {
-    $pubid = $_SESSION['cusid'];
+    $cusid = $_SESSION['cusid'];
 }
 ?>
 <!DOCTYPE html>
@@ -36,7 +36,7 @@ if (!isset($_SESSION['cusid'])) {
     include "nav.php";
     if (isset($_GET['bookid'])){
         $bookid = $_GET['bookid'];
-        updatedata("book","book_status = '2'","book_id = '$bookid'");
+        updatedata("book","book_status = '1'","book_id = '$bookid'");
     }
     ?>
     <div class="container px-4 px-lg-5 mt-3">
@@ -65,12 +65,13 @@ if (!isset($_SESSION['cusid'])) {
             <a href="my_work.php"><button type="button" class="btn btn-outline-success">อนุมัติ</button></a>
             <a href="draf.php"><button type="button" class="btn btn-outline-success">ฉบับร่าง</button></a>
             <a href="waitapp.php"><button type="button" class="btn btn-outline-success">รออนุมัติ</button></a>
-            <a href="cancle_book.php"><button type="button" class="btn btn-outline-success">ยกเลิก</button></a>
+            
         </div>
         <?php
-        $col = "book_id,book_name,book_cover,book_status,book_content,book_test,book_sumary,book_price,pub_penname";
-        $table = "book inner join publisher on pub_id = book_pubid";
-        $where = "book_pubid = '$pubid' and book_status = '2' ORDER BY book_dateup DESC";
+        $col = "*";
+        $table = "book inner join publisher on pub_id = book_pubid
+        inner join customer on cus_id = pub_cusid";
+        $where = "pub_cusid = '$cusid' and book_status = '1' ORDER BY book_dateup DESC";
         $sqlbook = select_where($col, $table, $where);
         ?>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
@@ -78,7 +79,7 @@ if (!isset($_SESSION['cusid'])) {
         if ($sqlbook->num_rows > 0) {
             while ($row = $sqlbook->fetch_assoc()) {
                 $status = $row['book_status'];
-                if ($status === '2') {
+                if ($status === '1') {
                     $status = 'รออนุมัติ';
                 }
         ?>
@@ -92,7 +93,7 @@ if (!isset($_SESSION['cusid'])) {
                     echo "<h5>ราคา</h5>";
                     echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)."</h4>";
                     echo "<h5>ผู้เผยแพร่</h5>";
-                    echo "<h4>".$row['pub_penname']."</h4>";
+                    echo "<h4>".$row['pub_name']."</h4>";
                 ?>
                 <!-- Button trigger modal -->
                 <a href='readbook.php?bookid=<?php echo $row['book_id']?>'><button class='btn btn-danger'>อ่าน</button></a>
@@ -114,9 +115,9 @@ if (!isset($_SESSION['cusid'])) {
                             echo "<h5>ราคา</h5>";
                             echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)."</h4>";
                             echo "<h5>เนื้อเรื่องย่อ</h5>";
-                            echo "<p>".$row['book_sumary']."</p>";
+                            echo "<p>".$row['book_summary']."</p>";
                             echo "<h5>ผู้เผยแพร่</h5>";
-                            echo "<h4>".$row['pub_penname']."</h4>";
+                            echo "<h4>".$row['pub_name']."</h4>";
                             echo "<a href='testread.php?bookid=".$row['book_id']."'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
                         ?>
                     </div>

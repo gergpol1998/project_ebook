@@ -22,7 +22,7 @@ else{
 $act = $_REQUEST['act'];
 //removeproduct
 if ($act == 'cancle') {
-    $sqldel_cart = "delete from carts where cart_cusid = '$cusid'";
+    $sqldel_cart = "delete from cart where cart_cusid = '$cusid'";
     $result = connectdb()->query($sqldel_cart);
     if (!$result){
         die(mysqli_error(connectdb()));

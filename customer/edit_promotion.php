@@ -18,12 +18,21 @@ if (!isset($_SESSION["cusid"])) {
 else{
     $proid = $_GET['proid'];
     $bookid = $_GET['bookid'];
+    $cusid = $_SESSION['cusid'];
 
-    $sqlpro = "select pro_id,book_id,pro_name,pro_discount,pro_sdate,pro_edate,book_name 
-    from promotion inner join book_promotion on pro_id = bp_proid
-    inner join book on bp_bookid = book_id
+    $sqlpro = "select *
+    from promotion inner join bookpro on pro_id = bpro_proid
+    inner join book on bpro_bookid = book_id
     where pro_id = '$proid'";
     $result = connectdb()->query($sqlpro);
+
+    $sqlpub = "select pub_id from publisher inner join customer on cus_id = pub_cusid
+    where pub_cusid = '$cusid'";
+    $ex_pub = connectdb()->query($sqlpub);
+    if ($ex_pub->num_rows > 0){
+        $row = $ex_pub->fetch_assoc();
+        $pubid = $row['pub_id'];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -66,9 +75,9 @@ else{
                     <label>เลือกหนังสือ</label><br>
                     <?php
                     //query book
-                    $sqlbookid = select("book_id", "book ORDER BY book_id");
+                    $sqlbookid = select_where("*", "book inner join publisher on book_pubid = pub_id","book_pubid = '$pubid' and book_status = '2'");
                     $sqlbookname = select("book_name", "book");
-                    $sqlbook_pro = select_where("bp_bookid", "book_promotion", "bp_bookid='$bookid'");
+                    $sqlbook_pro = select_where("bpro_bookid", "bookpro", "bpro_bookid='$bookid'");
                     $bookarr = array();
                     while ($row = $sqlbookid->fetch_assoc()) {
                         $bookarr[] = $row['book_id'];
@@ -76,7 +85,7 @@ else{
                     }
                     $books = array();
                     while ($row2 = $sqlbook_pro->fetch_assoc()) {
-                        $books[] = $row2['bp_bookid'];
+                        $books[] = $row2['bpro_bookid'];
                        
                     }
                     foreach ($bookarr as $value) {
@@ -86,7 +95,7 @@ else{
                         
                         $isChecked = in_array($value, $books) ? 'checked' : '';
                         // Output the checkbox with the pre-selected value and readonly attribute
-                        echo '<input type="checkbox" disabled value="' . $value . '" ' . $isChecked . '> ' . $bookname;
+                        echo '<input type="checkbox" name= "book[]" value="' . $value . '" ' . $isChecked . '> ' . $bookname;
                     }                                        
                 }
                 connectdb()->close();

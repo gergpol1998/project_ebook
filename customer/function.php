@@ -4,7 +4,7 @@ function connectdb(){
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $db = "ebook_system";
+    $db = "ebook";
     
     // Create connection
     $conn = new mysqli($servername, $username, $password ,$db);
@@ -24,9 +24,69 @@ function autoid($label,$max_id,$table,$null_id){
     $result = connectdb()->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-    $maxId = substr($row['LAST_ID'],9,5); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+    $maxId = substr($row['LAST_ID'],-7); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+    
     if ($maxId == '') {
         $maxId = $null_id;
+    } else {
+        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+    }
+    $maxId = str_pad($maxId,7,'0',STR_PAD_LEFT);
+    $nextId = $code . $yearMonth . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
+    return $nextId;
+    }
+}
+function tagautoid(){
+    $code = "TAG-"; //กำหนดอักษรนำหน้า
+    //query MAX ID
+    $sql = "SELECT MAX(tag_id) AS LAST_ID FROM tag";
+    $result = connectdb()->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    $maxId = substr($row['LAST_ID'],-11); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+    
+    if ($maxId == '') {
+        $maxId = '00000000001';
+    } else {
+        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+    }
+    $maxId = str_pad($maxId,11,'0',STR_PAD_LEFT);
+    $nextId = $code . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
+    return $nextId;
+    }
+}
+function bookautoid(){
+    $code = "BOOK-"; //กำหนดอักษรนำหน้า
+    $yearMonth = substr(date("Y") + 543, -2) . date("m"); //ดึงค่าปี เดือน ปัจจุบัน
+    //query MAX ID
+    $sql = "SELECT MAX(book_id) AS LAST_ID FROM book";
+    $result = connectdb()->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    $maxId = substr($row['LAST_ID'],-6); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+    
+    if ($maxId == '') {
+        $maxId = "000001";
+    } else {
+        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+    }
+    $maxId = str_pad($maxId,6,'0',STR_PAD_LEFT);
+    $nextId = $code . $yearMonth . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
+    return $nextId;
+    }
+}
+function receiptautoid(){
+    $code = "REC-"; //กำหนดอักษรนำหน้า
+    $yearMonth = substr(date("Y") + 543, -2) . date("m") .date("d"); //ดึงค่าปี เดือน ปัจจุบัน
+    //query MAX ID
+    $sql = "SELECT MAX(rec_id) AS LAST_ID FROM receipt";
+    $result = connectdb()->query($sql);
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+    $maxId = substr($row['LAST_ID'],-5); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+    
+    if ($maxId == '') {
+        $maxId = "00001";
     } else {
         $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
     }

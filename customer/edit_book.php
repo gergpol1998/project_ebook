@@ -18,7 +18,7 @@ if (!isset($_SESSION["cusid"])) {
 }
 if (isset($_GET['bookid'])) {
     $bookid = $_GET['bookid'];
-    $col = "book_name,book_cover,book_status,book_content,book_test,book_sumary,book_price";
+    $col = "book_name,book_cover,book_status,book_content,book_test,book_summary,book_price";
     $table = "book";
     $where = "book_id = '$bookid'";
     $sqlbook = select_where($col, $table, $where);
@@ -81,14 +81,14 @@ if (isset($_GET['bookid'])) {
                     //query typebook
                     $sqltypeid = select("type_id", "typebook");
                     $sqltypename = select("type_name", "typebook");
-                    $sqlbook_type = select_where("bt_typeid", "book_type", "bt_bookid='$bookid'");
+                    $sqlbook_type = select_where("btype_typeid", "book_type", "btype_bookid='$bookid'");
                     $typearr = array();
                     while ($row = $sqltypeid->fetch_assoc()) {
                         $typearr[] = $row['type_id'];
                     }
                     $typeid = array();
                     while ($row2 = $sqlbook_type->fetch_assoc()) {
-                        $typeid[] = $row2['bt_typeid'];
+                        $typeid[] = $row2['btype_typeid'];
                     }
                     foreach ($typearr as $value) {
                         // Check if the current value is in the database result
@@ -106,7 +106,7 @@ if (isset($_GET['bookid'])) {
                     $row4 = $sqlbooks->fetch_assoc();
                     ?>
                     <label>เรื่องย่อ</label>
-                    <textarea name="summary" class="form-control" required placeholder="summary"><?php echo $row4['book_sumary'] ?></textarea>
+                    <textarea name="summary" class="form-control" required placeholder="summary"><?php echo $row4['book_summary'] ?></textarea>
                     <label>ราคา</label>
                     <input type="number" name="price" class="form-control" required placeholder="price" value="<?php echo number_format($row4['book_price'], 2) ?>"><br>
 

@@ -2,7 +2,7 @@
 include "function.php";
 connectdb();
 if ($_POST['submit']){
-    $lastid = autoid('CUS-','cus_id','customer','00001');
+    $lastid = autoid('CUS-','cus_id','customer','0000001');
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $username = $_POST['username'];
@@ -14,10 +14,10 @@ if ($_POST['submit']){
     $tel = $_POST['tel'];
 
     //insert data
-    $values = "cus_id,cus_uname,cus_pass,cus_fname,cus_lname,cus_email,cus_tel,cus_bdate,
-    cus_sex,cus_coin";
-    $inputdata = "'$lastid','$username','$password','$fname','$lname','$email','$tel','$bdate'
-    ,'$gender',0";
+    $values = "cus_id,cus_uname,cus_pass,cus_name,cus_lname,cus_sex,cus_bdate,cus_tel,
+    cus_email,cus_coin";
+    $inputdata = "'$lastid','$username','$password','$fname','$lname','$gender','$bdate','$tel'
+    ,'$email',0";
     $result = insertdata('customer',$values,$inputdata);
 
     echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js' 

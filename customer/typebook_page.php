@@ -24,18 +24,18 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
     include "nav.php";
     ?>
     <div class="container px-4 px-lg-5 mt-3">
-        <h3><?php echo $typename?></h3>
+    <h3><?php echo $typename ?></h3>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 ">
             <?php
-            $col = "book_id,book_name,book_cover,book_status,book_content,book_test,book_sumary,book_price,pub_penname,book_dateapp,book_pubid";
+            $col = "*";
             $table = "book inner join publisher on pub_id = book_pubid
-            inner join book_type on bt_bookid = book_id
-            inner join typebook on type_id = bt_typeid";
-            $where = "type_id = '$typeid'and book_status = '3' ORDER BY book_dateapp DESC LIMIT 10";
+            inner join book_type on btype_bookid = book_id
+            inner join typebook on type_id = btype_typeid";
+            $where = "type_id = '$typeid'and book_status = '2' ORDER BY book_app DESC LIMIT 10";
             $sqlbook = select_where($col, $table, $where);
             if ($sqlbook->num_rows > 0) {
                 while ($row = $sqlbook->fetch_assoc()) {
-                    $bookdate = $row['book_dateapp'];
+                    $bookdate = $row['book_app'];
                     $passdate = strtotime("+4 days", strtotime($bookdate)); // วันหมดอายุ
                     $currentdate = time(); // วันที่ปัจจุบัน
             ?>
@@ -55,34 +55,57 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                             <h5 class="card-title text-center">ราคา</h5>
                             <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price'], 2) ?></h5>
                             <h5 class="card-title text-center">ผู้เผยแพร่</h5>
-                            <h5 class="card-text text-center text-success"><?php echo $row['pub_penname'] ?></h5>
+                            <h5 class="card-text text-center text-success"><?php echo $row['pub_name'] ?></h5>
                             <?php
                             if (isset($cusid)) {
+                                
                                 $sqlcus = select_where("cus_coin", "customer", "cus_id = '$cusid'");
                                 if ($sqlcus->num_rows > 0) {
                                     $row2 = $sqlcus->fetch_assoc();
 
-                                    if ($row2['cus_coin'] < $row['book_price']) {
-                                        echo '<script>
-                                                    function checkcoin(mycoin) {
-                                                        let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
-                                                        if (conf) {
-                                                            window.location = mycoin;
-                                                        }
-                                                    }
-                                                </script>';
-                                        echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
-                                    } else {
-
-                            ?>
-                                        <a href="#" class="btn btn-danger mb-2">ชำระเงิน</a>
-                                <?php
-                                    }
-                                }
+                                    $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
+                                        if ($sqlcheck->num_rows > 0){
+                                            echo '<button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>';
+                                            
+                                        }
+                                        else{
+                                            if ($row2['cus_coin'] < $row['book_price']) {
+                                                echo '<script>
+                                                            function checkcoin(mycoin) {
+                                                                let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
+                                                                if (conf) {
+                                                                    window.location = mycoin;
+                                                                }
+                                                            }
+                                                        </script>';
+                                                echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
+        
+                                                
+                                            } 
+                                            else {
+                                                $_SESSION['coin'] = $row2['cus_coin'];
+                                                $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
+                                                if ($sqlcheck->num_rows > 0){
+                                    ?>          
+                                                <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
+                                        <?php
+                                                }
+                                                else{
+                                                    
+                                                
+                                                ?>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <?php
+                                                }
+                                            }
+                                        }
+                                        }
+                                    
                                 ?>
                                 <?php
-                                $sqlcart = select_where("*", "carts", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                if ($sqlcart->num_rows > 0) {
+                                $sql = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
+                                $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
+                                if ($sql->num_rows > 0 || $sqlcart->num_rows > 0) {
 
                                 ?>
                                     <button class="btn btn-primary mb-2" disabled>เพิ่มเข้าตะกร้า</button>
@@ -94,7 +117,7 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                 <?php
                                 }
                                 $sqlshelf = "select * from bookshelf
-                                        where bs_bookid = '" . $row['book_id'] . "' and bs_uid = '$cusid'";
+                                        where bshelf_bookid = '" . $row['book_id'] . "' and bshelf_cusid = '$cusid'";
                                 $result = connectdb()->query($sqlshelf);
                                 if ($result->num_rows > 0) {
 
@@ -144,9 +167,9 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ราคา</h5>";
                                             echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . "</h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
-                                            echo "<p>" . $row['book_sumary'] . "</p>";
+                                            echo "<p>" . $row['book_summary'] . "</p>";
                                             echo "<h5>ผู้เผยแพร่</h5>";
-                                            echo "<h4>" . $row['pub_penname'] . "</h4>";
+                                            echo "<h4>" . $row['pub_name'] . "</h4>";
                                             echo "<a href='testread.php?bookid=".$row['book_id']."'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
                                             echo "<a href='mypage.php?pubid=".$row['book_pubid']."'><button class='btn btn-success'>หน้าร้าน</button></a>";
                                             ?>
@@ -161,6 +184,9 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                     </div>
             <?php
                 }
+            }
+            else{
+                echo "<h2>ไม่มีหนังสือมาใหม่</h2>";
             }
             connectdb()->close();
             ?>

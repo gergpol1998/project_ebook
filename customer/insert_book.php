@@ -2,7 +2,7 @@
 include "function.php";
 connectdb();
 session_start();
-$pub_id = $_SESSION["cusid"];
+$cusid = $_SESSION["cusid"];
 
 echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js' 
 </script>
@@ -12,8 +12,15 @@ echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js'
 echo "<script src='function.js'></script>";
 
 if (isset($_POST['submit'])) {
+
+    $sqlpub = "select * from publisher inner join customer on pub_cusid = cus_id
+    where pub_cusid = '$cusid'";
+    $ex_pub = connectdb()->query($sqlpub);
+    $row = $ex_pub->fetch_assoc();
+    $pubid = $row['pub_id'];
+
     //query lastid
-    $lastbookid = autoid('BOOK-', 'book_id', 'book', '00001');
+    $lastbookid = bookautoid();
 
     $bname = $_POST['bname'];
     $summary = $_POST['summary'];
@@ -49,19 +56,19 @@ if (isset($_POST['submit'])) {
     $current_year = date('Y');
 
     // Create a new folder using the current month and year
-    $new_folder1 = 'uploads/' . $pub_id . '/' . $current_year . '/' . $current_month;
+    $new_folder1 = 'uploads/' . $pubid . '/' . $current_year . '/' . $current_month;
     if (!file_exists($new_folder1)) {
         mkdir($new_folder1, 0777, true);
     }
 
     // Create a new folder using the current month and year
-    $new_folder2 = 'pdf/' . $pub_id . '/' . $current_year . '/' . $current_month;
+    $new_folder2 = 'pdf/' . $pubid . '/' . $current_year . '/' . $current_month;
     if (!file_exists($new_folder2)) {
         mkdir($new_folder2, 0777, true);
     }
 
     // Create a new folder using the current month and year
-    $new_folder3 = 'test/' . $pub_id . '/' . $current_year . '/' . $current_month;
+    $new_folder3 = 'test/' . $pubid . '/' . $current_year . '/' . $current_month;
     if (!file_exists($new_folder3)) {
         mkdir($new_folder3, 0777, true);
     }
@@ -86,24 +93,22 @@ if (isset($_POST['submit'])) {
 
         if (in_array($file_type1, $allowed_types1) && isset($file_type2) && isset($file_type3)) {
             // Update the file destination to the new folder
-            $file_destination1 = $new_folder1 . '/' . $file_name;
-            move_uploaded_file($file_tmp, $file_destination1);
+            $cover = $new_folder1 . '/' . $file_name;
+            move_uploaded_file($file_tmp, $cover);
 
 
-            $file_destination2 = $new_folder2 . '/' . $file_name2;
-            move_uploaded_file($file_tmp2, $file_destination2);
+            $content = $new_folder2 . '/' . $file_name2;
+            move_uploaded_file($file_tmp2, $content);
 
-            $file_destination3 = $new_folder3 . '/' . $file_name3;
-            move_uploaded_file($file_tmp3, $file_destination3);
+            $testread = $new_folder3 . '/' . $file_name3;
+            move_uploaded_file($file_tmp3, $testread);
 
             // Insert the new file path into the database
-            $col = "book_id,book_price,book_sumary,book_content,
-            book_test,book_dateapp,book_dateup,book_name,book_status,book_cover,
-            book_emp,book_pubid";
+            $col = "book_id,book_name,book_cover,book_summary
+            ,book_price,book_content,book_test,book_dateup,book_app,book_status,book_empid,book_pubid";
 
-            $values = "'$lastbookid','$price','$summary','$file_destination2',
-            '$file_destination3',NULL,NOW(),'$bname','1','$file_destination1',
-            NULL,'$pub_id'";
+            $values = "'$lastbookid','$bname','$cover','$summary','$price',
+            '$content','$testread',NOW(),NULL,'0',NULL,'$pubid'";
             $result = insertdata("book", $col, $values);
         } else {
             echo "Invalid file type. Please upload a JPEG, PNG.";
@@ -114,29 +119,22 @@ if (isset($_POST['submit'])) {
         die(mysqli_error(connectdb()));
     } else {
         foreach ($tag as $tags) {
-            $lasttagid = autoid("TAG-", "tag_id", "tag", "00001");
+            $lasttagid = tagautoid();
             $result2 = insertdata("tag", "tag_id,tag_name", "'$lasttagid','$tags'");
+            $result3 = insertdata("book_tag", "btag_bookid,btag_tagid", "'$lastbookid','$lasttagid'");
         }
     }
-    if (isset($result) && isset($result2)) {
-        foreach ($type_book as $type_books) {
-            $col_type = "bt_bookid,bt_typeid";
-            $values_type = "'$lastbookid','$type_books'";
-            $result3 = insertdata("book_type", $col_type, $values_type);
-        }
-    }
-
     if (isset($result) && isset($result2) && isset($result3)) {
-        $sql_tag = select("tag_id", "tag");
-        while ($row = $sql_tag->fetch_assoc()) {
-            $tag_id = $row['tag_id'];
-            $result4 = insertdata("tag_book", "tb_tagid,tb_bookid", "'$tag_id','$lastbookid'");
+        foreach ($type_book as $type_books) {
+            $col_type = "btype_bookid,btype_typeid";
+            $values_type = "'$lastbookid','$type_books'";
+            $result4 = insertdata("book_type", $col_type, $values_type);
         }
         echo '
             <script>
                 sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","draf.php");
             </script>
-                ';
+            ';
     }
 }
 
