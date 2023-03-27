@@ -34,11 +34,9 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
             die(mysqli_error(connectdb()));
         }
         else{
-            $result4 = insertdata("cart","cart_bookid,cart_cusid","'$bookid','$cusid'");
-
-            if ($result4) {
-                header("location:index.php");
-            } 
+            
+            header("location:index.php");
+            
         }
     }
     

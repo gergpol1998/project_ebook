@@ -23,7 +23,7 @@ session_start();
     <h3>โปรโมชั่น</h3>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 ">
             <?php
-            $sqlpro = "select *
+            $sqlpro = "select *,book_price - pro_discount as discount
             from promotion inner join bookpro on pro_id = bpro_proid 
             inner join book on bpro_bookid = book_id
             inner join publisher on pub_id = book_pubid
@@ -43,7 +43,7 @@ session_start();
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
-                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price']-$row['pro_discount'], 2) ?></h5>
+                            <del class = 'text-danger'><?php echo number_format($row['book_price'], 2)?></del><h5 class="card-text text-center text-danger"><?php echo number_format($row['discount'], 2) ?></h5>
                             <h5 class="card-title text-center">ผู้เผยแพร่</h5>
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_name'] ?></h5>
                             <?php
@@ -102,9 +102,11 @@ session_start();
                                     <button class="btn btn-primary mb-2" disabled>เพิ่มเข้าตะกร้า</button>
                                 <?php
                                 } else {
-
+                                    
                                 ?>
-                                    <a href="insert_cart.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
+                                
+                                <a href="insert_cart.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
+                                    
                                 <?php
                                 }
                                 $sqlshelf = "select * from bookshelf
@@ -156,7 +158,7 @@ session_start();
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
-                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price']-$row['pro_discount'], 2) . "</h4>";
+                                            echo "<del class = 'text-danger'>".number_format($row['book_price'], 2)."</del><h4 class= 'text-danger'>".  number_format($row['discount'], 2) . "</h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
                                             echo "<p>" . $row['book_summary'] . "</p>";
                                             echo "<h5>ผู้เผยแพร่</h5>";

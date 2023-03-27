@@ -11,21 +11,27 @@ echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js'
 
 echo "<script src='function.js'></script>";
 $i = 0;
-$total = 0;
 $bookarr = array();
-$coin = $_SESSION['coin'];
+
+
+if (isset($_SESSION['coin']) && isset($_SESSION['total'])) {
+    $coin = $_SESSION['coin'];
+    $total = $_SESSION['total'];
+}
 
 $sqlcart = "select * from cart inner join book on book_id = cart_bookid
 where cart_cusid = '$cusid'";
 $result = connectdb()->query($sqlcart);
+
+
 
 if ($result->num_rows > 0) {
     $newcoin = floatval($coin);
 
     while ($row = $result->fetch_assoc()) {
         $bookarr[] = $row['cart_bookid'];
-        $total += $row['book_price'];
     }
+    
     $newcoin -= $total;
     $sqlupcoin = "update customer set cus_coin = '$newcoin' where cus_id = '$cusid'";
     $excoin = connectdb()->query($sqlupcoin);
@@ -34,7 +40,7 @@ if ($result->num_rows > 0) {
     $lastreceiptid = receiptautoid();
 
     $sqlins_receipt = "insert into receipt (rec_id,rec_total,rec_date,rec_cusid)
-    values ('$lastreceiptid','$total',NOW(),'$cusid')";
+     values ('$lastreceiptid','$total',NOW(),'$cusid')";
     $result3 = connectdb()->query($sqlins_receipt);
 
     foreach ($bookarr as $bookid) {
@@ -46,8 +52,7 @@ if ($result->num_rows > 0) {
 
             if (!$result3) {
                 die(mysqli_error(connectdb()));
-            } 
-            else {
+            } else {
                 $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid,recd_proid)
                 values ('$i','$lastreceiptid','$bookid',NULL)";
                 $result4 = connectdb()->query($sqlins_detail);
@@ -61,7 +66,7 @@ if ($result->num_rows > 0) {
 
                     if (!$result5) {
                         die(mysqli_error(connectdb()));
-                    } 
+                    }
                     else {
                         $sqldel_cart = "delete from cart where cart_cusid = '$cusid'";
                         $result6 = connectdb()->query($sqldel_cart);
@@ -70,31 +75,35 @@ if ($result->num_rows > 0) {
                             die(mysqli_error(connectdb()));
                         } 
                         else {
+                             // ตรวจสอบว่ามี session ที่เก็บอยู่หรือไม่
+                               if (isset($_SESSION['coin'])) {
+                                // ลบข้อมูล session 
+                                unset($_SESSION["coin"]);
+                                unset($_SESSION['total']);
+                            }
                             echo '
                             <script>
                                 sweetalerts("สั่งซื้อสำเร็จ!!","success","","mybook.php");
                             </script>
                                 ';
+
                         }
                     }
                 }
             }
-        }
-        else{
+        } else {
             $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status)
             values ('$bookid','$cusid','0')";
             $result = connectdb()->query($sqlinsert_shelf);
-            if (!$result){
+            if (!$result) {
                 die(mysqli_error(connectdb()));
-            }
-            else{
+            } else {
                 $i++;
 
                 if (!$result2) {
                     die(mysqli_error(connectdb()));
-                } 
-                else {
-                    $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,rec_bookid,rec_proid)
+                } else {
+                    $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid,recd_proid)
                     values ('$i','$lastreceiptid','$bookid',NULL)";
                     $result3 = connectdb()->query($sqlins_detail);
 
@@ -107,25 +116,27 @@ if ($result->num_rows > 0) {
 
                         if (!$result4) {
                             die(mysqli_error(connectdb()));
-                        } 
+                        }
                         else {
                             $sqldel_cart = "delete from cart where cart_cusid = '$cusid'";
                             $result5 = connectdb()->query($sqldel_cart);
-                            // ตรวจสอบว่ามี session ที่เก็บอยู่หรือไม่
-                            if (isset($_SESSION['coin'])) {
-                                // ลบข้อมูล session 
-                                unset($_SESSION["coin"]);
-                            }
 
                             if (!$result5) {
                                 die(mysqli_error(connectdb()));
                             } 
                             else {
+                                // ตรวจสอบว่ามี session ที่เก็บอยู่หรือไม่
+                            if (isset($_SESSION['coin'])) {
+                                // ลบข้อมูล session 
+                                unset($_SESSION["coin"]);
+                                unset($_SESSION['total']);
+                            }
                                 echo '
                                 <script>
                                     sweetalerts("สั่งซื้อสำเร็จ!!","success","","mybook.php");
                                 </script>
                                     ';
+
                             }
                         }
                     }
@@ -133,7 +144,6 @@ if ($result->num_rows > 0) {
             }
         }
     }
-    
 }
 connectdb()->close();
 ?>

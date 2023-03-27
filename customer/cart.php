@@ -15,6 +15,7 @@ if (!isset($_SESSION['cusid'])) {
         ';
 } else {
     $cusid = $_SESSION['cusid'];
+      
 }
 ?>
 
@@ -55,12 +56,24 @@ if (!isset($_SESSION['cusid'])) {
                         <?php
                         $i = 1;
                         $total = 0;
+                        $sum1 = 0;
+                        $sum2 = 0;
+
 
                         $sqlcart = "select *from book inner join cart on book_id = cart_bookid
-                            where book_status = '2' and cart_cusid = '$cusid'";
+                        where book_status = '2' and cart_cusid = '$cusid'";
                         $result = connectdb()->query($sqlcart);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
+                                $bookid = $row['book_id'];
+                                $price = $row['book_price'];
+                                
+                                $sqlcart_pro = "select *,book_price - pro_discount as discount
+                                from promotion inner join bookpro on pro_id = bpro_proid 
+                                inner join book on bpro_bookid = book_id
+                                where bpro_bookid = ('$bookid') and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
+                                $ex_cartpro = connectdb()->query($sqlcart_pro);
+                                
 
                             ?>
                                 <tr>
@@ -75,7 +88,28 @@ if (!isset($_SESSION['cusid'])) {
                                         <?= $row['book_name'] ?>
                                     </td>
                                     <td>
-                                        <?php echo number_format($row['book_price'], 2) ?>
+                                        <?php
+                                        if ($ex_cartpro->num_rows > 0){
+                                            $row2 = $ex_cartpro->fetch_assoc();
+                                            echo "<del class='text-danger'>$row[book_price]</del>";
+                                            echo number_format($row2['discount'], 2);
+                                            $sum1 = $sum1 + $row2['discount'];
+                                            //echo $sum1;
+                                        }
+                                        else{
+                                            echo number_format($price, 2);
+                                            $sum2 = $sum2 + $price;
+                                            
+                                        }
+                                        if (isset($sum1)&&isset($sum2)){
+                                            $total = $sum1+$sum2;
+                                        }
+                                        else{
+                                            $total = $total + $sum2;
+                                        }
+                                        
+                                        ?>
+                                        
                                     </td>
                                     <script>
                                         function canclebook(cancle) {
@@ -94,8 +128,7 @@ if (!isset($_SESSION['cusid'])) {
                                 </tr>
                                 <?php
                                 $i++;
-                                $total += $row['book_price'];
-
+                                
                                 ?>
                             </tbody>
                             <?php
@@ -112,19 +145,11 @@ if (!isset($_SESSION['cusid'])) {
                             <td class="text-end" colspan="4"><a href='index.php'><button type='button' class="btn btn-outline-secondary">เลือกสินค้า</button></a></td>
                                 <?php
                                     $sqlcus = select_where("cus_coin", "customer", "cus_id = '$cusid'");
-                                    $sqlpub = "select pub_id from publisher inner join customer on pub_cusid = cus_id
-                                    where pub_cusid = '$cusid'";
-                                    $ex_pub = connectdb()->query($sqlpub);
-                                    if ($ex_pub->num_rows > 0){
-                                        $row3 = $ex_pub->fetch_assoc();
-                                        $pubid = $row3['pub_id'];
-
-                                        $sqlprice = "select book_price from book where book_pubid = '$pubid'";
-                                        $ex_price = connectdb()->query($sqlprice);
-                                    }
-                                    
-                                    if ($sqlcus->num_rows > 0 && $ex_price->num_rows > 0) {
-                                        $row= $ex_price->fetch_assoc();
+                                    $sqlprice = "select book_id,book_price from book
+                                    where book_id = '$bookid'";
+                                    $ex_price = connectdb()->query($sqlprice);
+                                    if ($sqlcus->num_rows > 0 ) {
+                                        $row = $ex_price->fetch_assoc();
                                         $row2 = $sqlcus->fetch_assoc();
                                         if ($row2['cus_coin'] < $row['book_price']) {
                                             echo '<script>
@@ -139,6 +164,7 @@ if (!isset($_SESSION['cusid'])) {
                                             echo "<td class='text-center'><a <a onclick='checkcoin(this.href); return false;' href='add_coin.php'><button type='button' class='btn btn-primary'>ชำระเงิน</button></a></td>";
                                         } else {
                                             $_SESSION['coin'] = $row2['cus_coin'];
+                                            $_SESSION['total'] = $total;
                                 ?>
                             <td class="text-center"><a href='insert_receipt.php'><button type='button' class="btn btn-primary">ชำระเงิน</button></a></td>
                     <?php
