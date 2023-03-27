@@ -91,7 +91,7 @@ if (!isset($_SESSION['cusid'])) {
                     echo "<h5>ชื่อเรื่อง</h5>";
                     echo "<h4>".$row['book_name']."</h4>";
                     echo "<h5>ราคา</h5>";
-                    echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)."</h4>";
+                    echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)." <i class='fas fa-coins'></i></h4>";
                     echo "<h5>ผู้เผยแพร่</h5>";
                     echo "<h4>".$row['pub_name']."</h4>";
                 ?>
@@ -113,7 +113,7 @@ if (!isset($_SESSION['cusid'])) {
                             echo "<h5>ชื่อเรื่อง</h5>";
                             echo "<h4>".$row['book_name']."</h4>";
                             echo "<h5>ราคา</h5>";
-                            echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)."</h4>";
+                            echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)." <i class='fas fa-coins'></i></h4>";
                             echo "<h5>เนื้อเรื่องย่อ</h5>";
                             echo "<p>".$row['book_summary']."</p>";
                             echo "<h5>ผู้เผยแพร่</h5>";

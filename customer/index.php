@@ -12,6 +12,7 @@ session_start();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
 
 </head>
 
@@ -39,11 +40,12 @@ session_start();
                         <div class="text-center mb-3">
                             <img src="<?php echo $row['book_cover'] ?>" class="card-img-top" width="200px" height="250px">
 
-                            <h5 class="card-title text-center text-danger">โปร <?php echo $row['pro_name']?></h5>
+                            <h5 class="card-title text-center text-danger">โปร <?php echo $row['pro_name']?> 
+                            ลดถึงวันที่ <?php echo $row['pro_edate']?></h5>
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
-                            <del class = 'text-danger'><?php echo number_format($row['book_price'], 2)?></del><h5 class="card-text text-center text-danger"><?php echo number_format($row['discount'], 2) ?></h5>
+                            <del class = 'text-danger'><?php echo number_format($row['book_price'], 2)?></del> <i class="fas fa-coins"></i><h5 class="card-text text-center text-danger"><?php echo number_format($row['discount'], 2) ?> <i class="fas fa-coins"></i></h5>
                             <h5 class="card-title text-center">ผู้เผยแพร่</h5>
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_name'] ?></h5>
                             <?php
@@ -59,7 +61,7 @@ session_start();
                                             
                                         }
                                         else{
-                                            if ($row2['cus_coin'] < $row['book_price']) {
+                                            if ($row2['cus_coin'] < $row['discount']) {
                                                 echo '<script>
                                                             function checkcoin(mycoin) {
                                                                 let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");
@@ -76,7 +78,8 @@ session_start();
                                                 
                                                 $_SESSION['coin'] = $row2['cus_coin'];
                                                 $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
-                                                if ($sqlcheck->num_rows > 0){
+                                                $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
+                                                if ($sqlcheck->num_rows > 0 || $sqlcart->num_rows > 0){
                                     ?>          
                                                 <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
                                         <?php
@@ -84,7 +87,7 @@ session_start();
                                                 else{
                                                     
                                                 ?>
-                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&discount=<?php echo $row['discount']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
                                                 <?php
                                                 }
                                             }
@@ -158,7 +161,7 @@ session_start();
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
-                                            echo "<del class = 'text-danger'>".number_format($row['book_price'], 2)."</del><h4 class= 'text-danger'>".  number_format($row['discount'], 2) . "</h4>";
+                                            echo "<del class = 'text-danger'>".number_format($row['book_price'], 2)."</del> <i class='fas fa-coins'></i><h4 class= 'text-danger'>".  number_format($row['discount'], 2) . " <i class='fas fa-coins'></i></h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
                                             echo "<p>" . $row['book_summary'] . "</p>";
                                             echo "<h5>ผู้เผยแพร่</h5>";
@@ -210,7 +213,7 @@ session_start();
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
-                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price'], 2) ?></h5>
+                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price'], 2) ?> <i class="fas fa-coins"></i></h5>
                             <h5 class="card-title text-center">ผู้เผยแพร่</h5>
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_name'] ?></h5>
                             <?php
@@ -242,7 +245,8 @@ session_start();
                                             else {
                                                 $_SESSION['coin'] = $row2['cus_coin'];
                                                 $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
-                                                if ($sqlcheck->num_rows > 0){
+                                                $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
+                                                if ($sqlcheck->num_rows > 0 || $sqlcart->num_rows > 0){
                                     ?>          
                                                 <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
                                         <?php
@@ -251,7 +255,7 @@ session_start();
                                                     
                                                 
                                                 ?>
-                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&price=<?php echo $row['book_price']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
                                                 <?php
                                                 }
                                             }
@@ -322,7 +326,7 @@ session_start();
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
-                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . "</h4>";
+                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) ." <i class='fas fa-coins'></i></h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
                                             echo "<p>" . $row['book_summary'] . "</p>";
                                             echo "<h5>ผู้เผยแพร่</h5>";

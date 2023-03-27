@@ -71,7 +71,7 @@ if (!isset($_SESSION['cusid'])) {
                                 $sqlcart_pro = "select *,book_price - pro_discount as discount
                                 from promotion inner join bookpro on pro_id = bpro_proid 
                                 inner join book on bpro_bookid = book_id
-                                where bpro_bookid = ('$bookid') and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
+                                where bpro_bookid = '$bookid' and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
                                 $ex_cartpro = connectdb()->query($sqlcart_pro);
                                 
 
@@ -151,7 +151,7 @@ if (!isset($_SESSION['cusid'])) {
                                     if ($sqlcus->num_rows > 0 ) {
                                         $row = $ex_price->fetch_assoc();
                                         $row2 = $sqlcus->fetch_assoc();
-                                        if ($row2['cus_coin'] < $row['book_price']) {
+                                        if ($row2['cus_coin'] < $total) {
                                             echo '<script>
                                                 function checkcoin(mycoin) {
                                                     let conf = confirm("เหรียญไม่พอต้องเติมเหรียญก่อน");

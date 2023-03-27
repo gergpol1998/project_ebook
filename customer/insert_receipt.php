@@ -53,8 +53,8 @@ if ($result->num_rows > 0) {
             if (!$result3) {
                 die(mysqli_error(connectdb()));
             } else {
-                $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid,recd_proid)
-                values ('$i','$lastreceiptid','$bookid',NULL)";
+                $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid)
+                values ('$i','$lastreceiptid','$bookid')";
                 $result4 = connectdb()->query($sqlins_detail);
 
                 if (!$result4) {
@@ -103,8 +103,8 @@ if ($result->num_rows > 0) {
                 if (!$result2) {
                     die(mysqli_error(connectdb()));
                 } else {
-                    $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid,recd_proid)
-                    values ('$i','$lastreceiptid','$bookid',NULL)";
+                    $sqlins_detail = "insert into receipt_detail (recd_no,recd_recid,recd_bookid)
+                    values ('$i','$lastreceiptid','$bookid')";
                     $result3 = connectdb()->query($sqlins_detail);
 
                     if (!$result3) {

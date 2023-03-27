@@ -22,7 +22,11 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
         $result2 = insertdata("cart","cart_bookid,cart_cusid","'$bookid','$cusid'");
 
         if ($result2) {
-            header("location:index.php");
+            echo '
+                 <script>
+                        sweetalerts("เพิ่มเข้าตะกร้า!!","success","","index.php");
+                </script>
+                                ';
         } 
     }
     else{
@@ -30,12 +34,22 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
         values ('$bookid','$cusid','0')";
         $result3 = connectdb()->query($sqlinsert_shelf);
         
+        
         if (!isset($result3)) {
             die(mysqli_error(connectdb()));
         }
         else{
-            
-            header("location:index.php");
+            $result4 = insertdata("cart","cart_bookid,cart_cusid","'$bookid','$cusid'");
+            if (!$result4){
+                die(mysqli_error(connectdb()));
+            }
+            else{
+                echo '
+                 <script>
+                        sweetalerts("เพิ่มเข้าตะกร้า!!","success","","index.php");
+                    </script>
+                                ';
+            }
             
         }
     }

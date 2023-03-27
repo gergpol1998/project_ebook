@@ -110,7 +110,7 @@ connectdb();
                 $row = $sqlcoin->fetch_assoc();
             
             ?>
-            <h5 class="text-danger text-center"><?php echo $row['cus_coin']?></h5>
+            <h5 class="text-danger text-center"><?php echo $row['cus_coin']?> <i class="fas fa-coins"></i></h5>
             <li><a class="dropdown-item" href="add_coin.php">เติมเหรียญ</a></li>
             <?php
             }

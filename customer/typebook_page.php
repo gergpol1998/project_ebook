@@ -25,6 +25,7 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
     ?>
     <div class="container px-4 px-lg-5 mt-3">
     <h3><?php echo $typename ?></h3>
+    <h3>มาใหม่</h3>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 ">
             <?php
             $col = "*";
@@ -53,7 +54,7 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
-                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price'], 2) ?></h5>
+                            <h5 class="card-text text-center text-danger"><?php echo number_format($row['book_price'], 2) ?> <i class="fas fa-coins"></i></h5>
                             <h5 class="card-title text-center">ผู้เผยแพร่</h5>
                             <h5 class="card-text text-center text-success"><?php echo $row['pub_name'] ?></h5>
                             <?php
@@ -165,7 +166,7 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
-                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . "</h4>";
+                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . " <i class='fas fa-coins'></i></h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
                                             echo "<p>" . $row['book_summary'] . "</p>";
                                             echo "<h5>ผู้เผยแพร่</h5>";
