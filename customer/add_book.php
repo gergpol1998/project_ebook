@@ -48,13 +48,13 @@ if (!isset($_SESSION["cusid"])) {
                     <input type="text" name="bname" class="form-control" required placeholder="name">
                     <label>หน้าปก</label>
                     <input type="file" name="file1" class="form-control" required>
-                    <p class="text-danger">upload a JPEG, PNG</p>
+                    <p class="text-danger"><?php if (isset($_SESSION['error'])) echo $_SESSION['error']?></p>
                     <label>เนื้อหา</label>
                     <input type="file" name="file2" class="form-control" required>
-                    <p class="text-danger">upload a PDF</p>
+                    <p class="text-danger"><?php if (isset($_SESSION['error2'])) echo $_SESSION['error2']?></p>
                     <label>ทดลองอ่าน</label>
                     <input type="file" name="file3" class="form-control" required>
-                    <p class="text-danger">upload a PDF</p>
+                    <p class="text-danger"><?php if (isset($_SESSION['error3'])) echo $_SESSION['error3']?></p>
                     <label>หมวดหมู่</label><br>
                     <?php
                     //query typebook

@@ -61,6 +61,35 @@ if (!isset($_SESSION['cusid'])) {
             <a href="promotion.php"><button type="button" class="btn btn-outline-success">โปรโมชั่นที่ใช้งานได้</button></a>
             <a href="end_promotion.php"><button type="button" class="btn btn-outline-success">โปรโมชั่นที่หมดอายุ</button></a>
         </div>
+
+        <form method="POST" class="form-inline d-flex">
+            <input class="form-control me-2" id="search5" type="text" placeholder="ชื่อโปรโมชั่น">
+        </form>
+        <div class="list-group list-group-item-action" id="content5"></div>
+        
+
+        <script>
+            $(document).ready(function() {
+                $('#search5').keyup(function() {
+                    var Search = $('#search5').val(); // getvalue
+
+                    if (Search != '') {
+                        $.ajax({
+                            url: "search_promotion.php",
+                            method: "POST",
+                            data: {
+                                search: Search
+                            },
+                            success: function(data) {
+                                $('#content5').html(data);
+                            }
+                        })
+                    } else {
+                        $('#content5').html('');
+                    }
+                });
+            });
+        </script>
         
         <div class="row">
             <div class="col-md-10">

@@ -76,7 +76,7 @@ else{
                     <?php
                     //query book
                     $sqlbookid = select_where("*", "book inner join publisher on book_pubid = pub_id","book_pubid = '$pubid' and book_status = '2'");
-                    $sqlbookname = select("book_name", "book");
+                    $sqlbookname = select_where("*", "book inner join publisher on book_pubid = pub_id","book_pubid = '$pubid'");
                     $sqlbook_pro = select_where("bpro_bookid", "bookpro", "bpro_bookid='$bookid'");
                     $bookarr = array();
                     while ($row = $sqlbookid->fetch_assoc()) {
@@ -90,8 +90,11 @@ else{
                     }
                     foreach ($bookarr as $value) {
                         // Check if the current value is in the database result
-                        $row3 = $sqlbookname->fetch_assoc();
-                        $bookname = $row3['book_name'];
+                        if ($sqlbookname->num_rows > 0){
+                            $row3 = $sqlbookname->fetch_assoc();
+                            $bookname = $row3['book_name'];
+                        }
+                        
                         
                         $isChecked = in_array($value, $books) ? 'checked' : '';
                         // Output the checkbox with the pre-selected value and readonly attribute

@@ -61,8 +61,35 @@ if (!isset($_SESSION['cusid'])) {
             <a href="my_work.php"><button type="button" class="btn btn-outline-success">อนุมัติ</button></a>
             <a href="draf.php"><button type="button" class="btn btn-outline-success">ฉบับร่าง</button></a>
             <a href="waitapp.php"><button type="button" class="btn btn-outline-success">รออนุมัติ</button></a>
-            
         </div>
+        <form method="POST" class="form-inline d-flex">
+            <input class="form-control me-2" id="search2" type="text" placeholder="ชื่อหนังสือ/ผู้เผยแพร่/หมวดหมู่">
+        </form>
+        <div class="list-group list-group-item-action" id="content2"></div>
+        
+
+        <script>
+            $(document).ready(function() {
+                $('#search2').keyup(function() {
+                    var Search = $('#search2').val(); // getvalue
+
+                    if (Search != '') {
+                        $.ajax({
+                            url: "search_book.php",
+                            method: "POST",
+                            data: {
+                                search: Search
+                            },
+                            success: function(data) {
+                                $('#content2').html(data);
+                            }
+                        })
+                    } else {
+                        $('#content2').html('');
+                    }
+                });
+            });
+        </script>
         <?php
         $col = "*";
         $table = "book inner join publisher on pub_id = book_pubid
@@ -71,65 +98,65 @@ if (!isset($_SESSION['cusid'])) {
         $sqlbook = select_where($col, $table, $where);
         ?>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
-        <?php
-        if ($sqlbook->num_rows > 0) {
-            while ($row = $sqlbook->fetch_assoc()) {
-                $status = $row['book_status'];
-                if ($status === '2') {
-                    $status = 'อนุมัติ';
-                }
-        ?>
-        <div class="col sm-3">
-            <div class="text-center mb-3">
-                <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
-                <?php
-                    echo "<h4 class= 'text-success'>$status</h4>";
-                    echo "<h5>ชื่อเรื่อง</h5>";
-                    echo "<h4>".$row['book_name']."</h4>";
-                    echo "<h5>ราคา</h5>";
-                    echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)." <i class='fas fa-coins'></i></h4>";
-                    echo "<h5>ผู้เผยแพร่</h5>";
-                    echo "<h4>".$row['pub_name']."</h4>";
-                ?>
-                <!-- Button trigger modal -->
-                <a href='readbook.php?bookid=<?php echo $row['book_id']?>'><button class='btn btn-danger'>อ่าน</button></a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">รายละเอียด</button>
-                <!-- Modal -->
-                <div class="modal fade" id="<?php echo $row['book_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">รายละเอียด</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
-                        <?php
+            <?php
+            if ($sqlbook->num_rows > 0) {
+                while ($row = $sqlbook->fetch_assoc()) {
+                    $status = $row['book_status'];
+                    if ($status === '2') {
+                        $status = 'อนุมัติ';
+                    }
+            ?>
+                    <div class="col sm-3">
+                        <div class="text-center mb-3">
+                            <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
+                            <?php
                             echo "<h4 class= 'text-success'>$status</h4>";
                             echo "<h5>ชื่อเรื่อง</h5>";
-                            echo "<h4>".$row['book_name']."</h4>";
+                            echo "<h4>" . $row['book_name'] . "</h4>";
                             echo "<h5>ราคา</h5>";
-                            echo "<h4 class= 'text-danger'>".number_format($row['book_price'], 2)." <i class='fas fa-coins'></i></h4>";
-                            echo "<h5>เนื้อเรื่องย่อ</h5>";
-                            echo "<p>".$row['book_summary']."</p>";
+                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . " <i class='fas fa-coins'></i></h4>";
                             echo "<h5>ผู้เผยแพร่</h5>";
-                            echo "<h4>".$row['pub_name']."</h4>";
-                            echo "<a href='testread.php?bookid=".$row['book_id']."'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
-                        ?>
+                            echo "<h4>" . $row['pub_name'] . "</h4>";
+                            ?>
+                            <!-- Button trigger modal -->
+                            <a href='readbook.php?bookid=<?php echo $row['book_id'] ?>'><button class='btn btn-danger'>อ่าน</button></a>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">รายละเอียด</button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="<?php echo $row['book_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">รายละเอียด</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
+                                            <?php
+                                            echo "<h4 class= 'text-success'>$status</h4>";
+                                            echo "<h5>ชื่อเรื่อง</h5>";
+                                            echo "<h4>" . $row['book_name'] . "</h4>";
+                                            echo "<h5>ราคา</h5>";
+                                            echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . " <i class='fas fa-coins'></i></h4>";
+                                            echo "<h5>เนื้อเรื่องย่อ</h5>";
+                                            echo "<p>" . $row['book_summary'] . "</p>";
+                                            echo "<h5>ผู้เผยแพร่</h5>";
+                                            echo "<h4>" . $row['pub_name'] . "</h4>";
+                                            echo "<a href='testread.php?bookid=" . $row['book_id'] . "'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
+                                            ?>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-        <?php
-         }
-        }
-        connectdb()->close();
-        ?>         
+            <?php
+                }
+            }
+            connectdb()->close();
+            ?>
         </div>
     </div>
 </body>

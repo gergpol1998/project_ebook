@@ -1,7 +1,8 @@
 <?php
 include "function.php";
 connectdb();
-
+session_start();
+$cusid = $_SESSION["cusid"];
 
 echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js' 
 </script>
@@ -28,27 +29,35 @@ if($_POST['submit']){
         foreach ($book as $books){
             $sqldel_bookpro = "delete from bookpro where bpro_bookid = '$books' and bpro_proid = '$proid'";
             $result2 = connectdb()->query($sqldel_bookpro);
-        
-            if(!$result2){
-                die(mysqli_error(connectdb()));
-            }
-            else{
-                $sqlins_bookpro = "insert into bookpro (bpro_bookid ,bpro_proid)
-                values ('$books','$proid')";
-                $result3 = connectdb()->query($sqlins_bookpro);
-                if(!$result3){
+        }
+        if(!$result2){
+            die(mysqli_error(connectdb()));
+        }
+        else{
+            foreach ($book as $books){
+                $sqldel_bookpro = "delete from bookpro where bpro_bookid = '$books' and bpro_proid = '$proid'";
+                $result2 = connectdb()->query($sqldel_bookpro);
+            
+                if(!$result2){
                     die(mysqli_error(connectdb()));
                 }
                 else{
-                    echo '
-                <script>
-                    sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","promotion.php");
-                </script>
-                ';
+                    $sqlins_bookpro = "insert into bookpro (bpro_bookid ,bpro_proid)
+                    values ('$books','$proid')";
+                    $result3 = connectdb()->query($sqlins_bookpro);
+                    if(!$result3){
+                        die(mysqli_error(connectdb()));
+                    }
+                    else{
+                        echo '
+                    <script>
+                        sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","promotion.php");
+                    </script>
+                    ';
+                    }
                 }
             }
         }
-        
     }
 }
 ?>

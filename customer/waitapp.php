@@ -65,8 +65,35 @@ if (!isset($_SESSION['cusid'])) {
             <a href="my_work.php"><button type="button" class="btn btn-outline-success">อนุมัติ</button></a>
             <a href="draf.php"><button type="button" class="btn btn-outline-success">ฉบับร่าง</button></a>
             <a href="waitapp.php"><button type="button" class="btn btn-outline-success">รออนุมัติ</button></a>
-            
         </div>
+        <form method="POST" class="form-inline d-flex">
+            <input class="form-control me-2" id="search4" type="text" placeholder="ชื่อหนังสือ/ผู้เผยแพร่/หมวดหมู่">
+        </form>
+        <div class="list-group list-group-item-action" id="content4"></div>
+        
+
+        <script>
+            $(document).ready(function() {
+                $('#search4').keyup(function() {
+                    var Search = $('#search4').val(); // getvalue
+
+                    if (Search != '') {
+                        $.ajax({
+                            url: "search_wait.php",
+                            method: "POST",
+                            data: {
+                                search: Search
+                            },
+                            success: function(data) {
+                                $('#content4').html(data);
+                            }
+                        })
+                    } else {
+                        $('#content4').html('');
+                    }
+                });
+            });
+        </script>
         <?php
         $col = "*";
         $table = "book inner join publisher on pub_id = book_pubid

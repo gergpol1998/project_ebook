@@ -22,11 +22,7 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
         $result2 = insertdata("cart","cart_bookid,cart_cusid","'$bookid','$cusid'");
 
         if ($result2) {
-            echo '
-                 <script>
-                        sweetalerts("เพิ่มเข้าตะกร้า!!","success","","index.php");
-                </script>
-                                ';
+            header("location:index.php");
         } 
     }
     else{
@@ -44,11 +40,7 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
                 die(mysqli_error(connectdb()));
             }
             else{
-                echo '
-                 <script>
-                        sweetalerts("เพิ่มเข้าตะกร้า!!","success","","index.php");
-                    </script>
-                                ';
+                header("location:index.php");
             }
             
         }

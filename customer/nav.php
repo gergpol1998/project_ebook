@@ -23,14 +23,15 @@ connectdb();
           ?>
           <ul class="dropdown-menu">
             <?php
-            if ($result->num_rows > 0){
-              while ($row = $result->fetch_assoc()){
-  
+            if ($result->num_rows > 0) {
+              while ($row = $result->fetch_assoc()) {
+
             ?>
-            <li><a class="dropdown-item" href="typebook_page.php?typeid=<?php echo $row['type_id']?>&typename=<?php echo $row['type_name']?>"><?php echo $row['type_name']?></a></li>
-            <li>
-              <hr class="dropdown-divider"></hr>
-            </li>
+                <li><a class="dropdown-item" href="typebook_page.php?typeid=<?php echo $row['type_id'] ?>&typename=<?php echo $row['type_name'] ?>"><?php echo $row['type_name'] ?></a></li>
+                <li>
+                  <hr class="dropdown-divider">
+                  </hr>
+                </li>
             <?php
               }
             }
@@ -38,19 +39,18 @@ connectdb();
           </ul>
         </li>
         <?php
-        if(isset($_SESSION['cusid']) && isset($_SESSION['cusname'])){
+        if (isset($_SESSION['cusid']) && isset($_SESSION['cusname'])) {
           $cusid = $_SESSION['cusid'];
           $cusname = $_SESSION['cusname'];
-          $result = select_where("pub_id","publisher","pub_cusid = '$cusid'");
+          $result = select_where("pub_id", "publisher", "pub_cusid = '$cusid'");
         }
-        if(isset($cusid)){
+        if (isset($cusid)) {
         ?>
-        <li class="nav-item">
-          <a class="nav-link" href="shelf.php">ชั้นหนังสือ</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="shelf.php">ชั้นหนังสือ</a>
+          </li>
         <?php
-        }
-        else{
+        } else {
         ?>
           <script>
             function registt(mypages) {
@@ -61,28 +61,28 @@ connectdb();
             }
           </script>
           <li class="nav-item"><a class="nav-link" onclick="registt(this.href); return false;" href="register.php">ชั้นหนังสือ</a></li>
-        <?php
+          <?php
         }
 
-        if(isset($cusid)){
+        if (isset($cusid)) {
           if (isset($result) && $result->num_rows > 0) {
-        ?>
-          <li class="nav-item"><a class="nav-link" href="my_work.php">หน้าผู้เผยแพร่</a></li>
-        <?php
-        } else {
-        ?>
-          <script>
-            function regist(mypage) {
-              let agree = confirm("ต้องสมัครเป็นผู้เผยแพร่ก่อน");
-              if (agree) {
-                window.location = mypage;
+          ?>
+            <li class="nav-item"><a class="nav-link" href="my_work.php">หน้าผู้เผยแพร่</a></li>
+          <?php
+          } else {
+          ?>
+            <script>
+              function regist(mypage) {
+                let agree = confirm("ต้องสมัครเป็นผู้เผยแพร่ก่อน");
+                if (agree) {
+                  window.location = mypage;
+                }
               }
-            }
-          </script>
-          <li class="nav-item"><a class="nav-link" onclick="regist(this.href); return false;" href="publis_register.php">หน้าผู้เผยแพร่</a></li>
+            </script>
+            <li class="nav-item"><a class="nav-link" onclick="regist(this.href); return false;" href="publis_register.php">หน้าผู้เผยแพร่</a></li>
         <?php
           }
-      }
+        }
         ?>
         <?php
         if (!isset($cusid)) {
@@ -94,54 +94,85 @@ connectdb();
             <a class="nav-link" href="login.php">เข้าสู่ระบบ</a>
           </li>
         <?php
-        }
-        else{
+        } else {
         ?>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <?php
-            echo $cusname;
-            ?>
-          </a>
-          <ul class="dropdown-menu">
-            <?php
-            $sqlcoin = select_where("cus_coin","customer","cus_id = '$cusid'");
-            if ($sqlcoin->num_rows > 0){
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <?php
+              echo $cusname;
+              ?>
+            </a>
+            <ul class="dropdown-menu">
+              <?php
+              $sqlcoin = select_where("cus_coin", "customer", "cus_id = '$cusid'");
+              if ($sqlcoin->num_rows > 0) {
                 $row = $sqlcoin->fetch_assoc();
-            
-            ?>
-            <h5 class="text-danger text-center"><?php echo $row['cus_coin']?> <i class="fas fa-coins"></i></h5>
-            <li><a class="dropdown-item" href="add_coin.php">เติมเหรียญ</a></li>
-            <?php
-            }
-            ?>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="logout.php">ออกจากระบบ</a></li>
-          </ul>
-        </li>
+
+              ?>
+                <h5 class="text-danger text-center"><?php echo $row['cus_coin'] ?> <i class="fas fa-coins"></i></h5>
+                <li><a class="dropdown-item" href="add_coin.php">เติมเหรียญ</a></li>
+              <?php
+              }
+              ?>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="logout.php">ออกจากระบบ</a></li>
+            </ul>
+          </li>
         <?php
         }
         ?>
       </ul>
-    <ul class="navbar-nav ms-auto">
-      <?php
-          $sql_cart = select_where("count(cart_bookid) as countbook","cart","cart_cusid = '$cusid'");
-          if ($sql_cart->num_rows > 0){
-            $row = $sql_cart->fetch_assoc();
+      <ul class="navbar-nav ms-auto">
+        <?php
+        $sql_cart = select_where("count(cart_bookid) as countbook", "cart", "cart_cusid = '$cusid'");
+        if ($sql_cart->num_rows > 0) {
+          $row = $sql_cart->fetch_assoc();
 
-      ?>
-      <li class="nav-item">
-        <a class="nav-link" href="cart.php">ตะกร้าสินค้า <i class="fas fa-shopping-cart"></i> <span class="badge bg-secondary"><?php echo  $row['countbook'] ?></span></a>
-      </li>
-    </ul>
+        ?>
+          <li class="nav-item">
+            <a class="nav-link" href="cart.php">ตะกร้าสินค้า <i class="fas fa-shopping-cart"></i> <span class="badge bg-secondary"><?php echo  $row['countbook'] ?></span></a>
+          </li>
+      </ul>
     <?php
-          }
-          else{
-            echo "<a class='nav-link' href='cart.php'>ตะกร้าสินค้า <i class='fas fa-shopping-cart'></i> <span class='badge bg-secondary'>0</span></a>";
-          }
+        } else {
+          echo "<a class='nav-link' href='cart.php'>ตะกร้าสินค้า <i class='fas fa-shopping-cart'></i> <span class='badge bg-secondary'>0</span></a>";
+        }
     ?>
+    </div>
+    <div>
+      <div class="d-flex">
+          <form method="POST" class="form-inline d-flex">
+            <input class="form-control me-2" id="search" type="text" placeholder="ชื่อหนังสือ/ผู้เผยแพร่/หมวดหมู่">
+          </form>
+      </div>
+      <div class="list-group list-group-item-action" id="content"></div>
     </div>
   </div>
 </nav>
+
+<script src="https://code.jquery.com/jquery-3.6.1.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#search').keyup(function() {
+            var Search = $('#search').val(); // getvalue
+
+            if (Search != '') {
+                $.ajax({
+                    url: "search_api.php",
+                    method: "POST",
+                    data: {
+                        search: Search
+                    },
+                    success: function(data) {
+                        $('#content').html(data);
+                    }
+                })
+            } else {
+                $('#content').html('');
+            }
+        });
+    });
+</script>

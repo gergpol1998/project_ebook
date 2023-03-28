@@ -77,64 +77,78 @@ if (isset($_POST['submit'])) {
         // Check the file type
         $file_type1 = exif_imagetype($file_tmp);
         $allowed_types1 = array(IMAGETYPE_JPEG, IMAGETYPE_PNG);
+        if (!in_array($file_type1, $allowed_types1)) {
+            $_SESSION['error'] = 'Error: Only JPEG and PNG files are allowed.';
+        }
+        else{
+            unset($_SESSION['error']);
+        }
 
         // Check the file type
         $file_type2 = mime_content_type($file_tmp2);
         if ($file_type2 !== 'application/pdf') {
-            echo 'Error: Only PDF files are allowed.';
+            $_SESSION['error2'] = 'Error: Only PDF files are allowed.';   
+        }
+        else{
+            unset($_SESSION['error2']);
         }
 
         // Check the file type
         $file_type3 = mime_content_type($file_tmp3);
         if ($file_type3 !== 'application/pdf') {
-            echo 'Error: Only PDF files are allowed.';
+            $_SESSION['error3'] = 'Error: Only PDF files are allowed.';
+        }
+        else{
+            unset($_SESSION['error3']);
         }
 
-
-        if (in_array($file_type1, $allowed_types1) && isset($file_type2) && isset($file_type3)) {
-            // Update the file destination to the new folder
-            $cover = $new_folder1 . '/' . $file_name;
-            move_uploaded_file($file_tmp, $cover);
-
-
-            $content = $new_folder2 . '/' . $file_name2;
-            move_uploaded_file($file_tmp2, $content);
-
-            $testread = $new_folder3 . '/' . $file_name3;
-            move_uploaded_file($file_tmp3, $testread);
-
-            // Insert the new file path into the database
-            $col = "book_id,book_name,book_cover,book_summary
-            ,book_price,book_content,book_test,book_dateup,book_app,book_status,book_empid,book_pubid";
-
-            $values = "'$lastbookid','$bname','$cover','$summary','$price',
-            '$content','$testread',NOW(),NULL,'0',NULL,'$pubid'";
-            $result = insertdata("book", $col, $values);
-        } else {
-            echo "Invalid file type. Please upload a JPEG, PNG.";
+        if (isset($_SESSION['error']) || isset($_SESSION['error2']) || isset($_SESSION['error3'])){
+            header("location:add_book.php");
         }
-    }
-
-    if (!isset($result)) {
-        die(mysqli_error(connectdb()));
-    } else {
-        foreach ($tag as $tags) {
-            $lasttagid = tagautoid();
-            $result2 = insertdata("tag", "tag_id,tag_name", "'$lasttagid','$tags'");
-            $result3 = insertdata("book_tag", "btag_bookid,btag_tagid", "'$lastbookid','$lasttagid'");
+        else{
+            if (in_array($file_type1, $allowed_types1) && isset($file_type2) && isset($file_type3)) {
+                // Update the file destination to the new folder
+                $cover = $new_folder1 . '/' . $file_name;
+                move_uploaded_file($file_tmp, $cover);
+    
+    
+                $content = $new_folder2 . '/' . $file_name2;
+                move_uploaded_file($file_tmp2, $content);
+    
+                $testread = $new_folder3 . '/' . $file_name3;
+                move_uploaded_file($file_tmp3, $testread);
+    
+                // Insert the new file path into the database
+                $col = "book_id,book_name,book_cover,book_summary
+                ,book_price,book_content,book_test,book_dateup,book_app,book_status,book_empid,book_pubid";
+    
+                $values = "'$lastbookid','$bname','$cover','$summary','$price',
+                '$content','$testread',NOW(),NULL,'0',NULL,'$pubid'";
+                $result = insertdata("book", $col, $values);
+    
+                if (!isset($result)) {
+                    die(mysqli_error(connectdb()));
+                } else {
+                    foreach ($tag as $tags) {
+                        $lasttagid = tagautoid();
+                        $result2 = insertdata("tag", "tag_id,tag_name", "'$lasttagid','$tags'");
+                        $result3 = insertdata("book_tag", "btag_bookid,btag_tagid", "'$lastbookid','$lasttagid'");
+                    }
+                }
+                if (isset($result) && isset($result2) && isset($result3)) {
+                    foreach ($type_book as $type_books) {
+                        $col_type = "btype_bookid,btype_typeid";
+                        $values_type = "'$lastbookid','$type_books'";
+                        $result4 = insertdata("book_type", $col_type, $values_type);
+                    }
+                    echo '
+                        <script>
+                            sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","draf.php");
+                        </script>
+                        ';
+                }
+            }
         }
-    }
-    if (isset($result) && isset($result2) && isset($result3)) {
-        foreach ($type_book as $type_books) {
-            $col_type = "btype_bookid,btype_typeid";
-            $values_type = "'$lastbookid','$type_books'";
-            $result4 = insertdata("book_type", $col_type, $values_type);
-        }
-        echo '
-            <script>
-                sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","draf.php");
-            </script>
-            ';
     }
 }
 
