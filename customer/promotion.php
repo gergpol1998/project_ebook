@@ -140,7 +140,7 @@ if (!isset($_SESSION['cusid'])) {
                                             <?php echo $row['book_name']?>
                                         </td>
                                         <td>
-                                        <a href="edit_promotion.php?proid=<?php echo $row['pro_id'] ?>&bookid=<?php echo $row['book_id']?>"><button type='button' class='btn btn-warning'>แก้ไข</button></a>
+                                        <a href="edit_promotion.php?proid=<?php echo $row['pro_id'] ?>"><button type='button' class='btn btn-warning'>แก้ไข</button></a>
                                         </td>
                                         <script>
                                             function canclebook(cancle) {

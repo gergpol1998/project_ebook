@@ -17,7 +17,6 @@ if (!isset($_SESSION["cusid"])) {
 }
 else{
     $proid = $_GET['proid'];
-    $bookid = $_GET['bookid'];
     $cusid = $_SESSION['cusid'];
 
     $sqlpro = "select *
@@ -77,7 +76,7 @@ else{
                     //query book
                     $sqlbookid = select_where("*", "book inner join publisher on book_pubid = pub_id","book_pubid = '$pubid' and book_status = '2'");
                     $sqlbookname = select_where("*", "book inner join publisher on book_pubid = pub_id","book_pubid = '$pubid'");
-                    $sqlbook_pro = select_where("bpro_bookid", "bookpro", "bpro_bookid='$bookid'");
+                    $sqlbook_pro = select_where("bpro_bookid", "bookpro", "bpro_proid = '$proid'");
                     $bookarr = array();
                     while ($row = $sqlbookid->fetch_assoc()) {
                         $bookarr[] = $row['book_id'];
