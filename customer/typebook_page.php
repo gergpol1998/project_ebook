@@ -272,7 +272,7 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                                     
                                                 
                                                 ?>
-                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&price=<?php echo $row['book_price']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&discount=<?php echo $row['discount']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
                                                 <?php
                                                 }
                                             }
@@ -596,7 +596,7 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                                     
                                                 
                                                 ?>
-                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&price=<?php echo $row['book_price']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&discount=<?php echo $row['discount']?>" class="btn btn-danger mb-2">ชำระเงิน</a>
                                                 <?php
                                                 }
                                             }
