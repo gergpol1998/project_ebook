@@ -20,6 +20,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     where book_status = '2' and (tag_name like '%$Search%')";
     $ex_tag = connectdb()->query($sqltag);
 
+    $sqlpro = "select * 
+    from promotion inner join bookpro on pro_id = bpro_proid
+    inner join book on bpro_bookid = book_id
+    where pro_edate >= CURDATE()+ INTERVAL 1 DAY and book_status = '2'
+    and pro_name like '%$Search%'";
+    $ex_pro = connectdb()->query($sqlpro);
+
     if($ex_book->num_rows > 0){
         while($row = $ex_book->fetch_array()){
             echo '<a href="search_content.php?bookid='.$row['book_id'].'" class="list-group list-group-item-action border p-2">'.$row['book_name'].'</a>';
@@ -32,6 +39,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     }
     elseif($ex_tag->num_rows > 0){
         while($row = $ex_tag->fetch_array()){
+            echo '<a href="search_content.php?bookid='.$row['book_id'].'" class="list-group list-group-item-action border p-2">'.$row['book_name'].'</a>';
+        }
+    }
+    elseif($ex_pro->num_rows > 0){
+        while($row = $ex_pro->fetch_array()){
             echo '<a href="search_content.php?bookid='.$row['book_id'].'" class="list-group list-group-item-action border p-2">'.$row['book_name'].'</a>';
         }
     }
