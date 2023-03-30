@@ -40,12 +40,29 @@ session_start();
 
             if ($ex_pro->num_rows > 0) {
                 while ($row = $ex_pro->fetch_assoc()) {
-                    
+                    $bookid = $row['book_id'];
             ?>
                     <div class="col sm-3">
                         <div class="text-center mb-3">
                             <img src="<?php echo $row['book_cover'] ?>" class="card-img-top" width="200px" height="250px">
-
+                            <?php
+                                $sqlrate = "select book_name,AVG(bscore_score) as rating
+                                from book
+                                inner join bookscore on book_id = bscore_bookid
+                                inner join customer on bscore_cusid = cus_id
+                                where bscore_bookid = '$bookid'
+                                group by bscore_bookid";
+                                $ex_rate = connectdb()->query($sqlrate);
+                                if ($ex_rate->num_rows > 0){
+                                    $row2 = $ex_rate->fetch_assoc();
+                                    $rating = $row2['rating'];
+                                }
+                                else{
+                                    $rating = 0;
+                                }
+                                ?>
+                                <h5 class="card-title text-center">คะแนน <?php echo round($rating)?>/5</h5>
+                            
                             <h5 class="card-title text-center text-danger">โปร <?php echo $row['pro_name']?> 
                             ลดถึงวันที่ <?php echo $row['pro_edate']?></h5>
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
@@ -164,6 +181,17 @@ session_start();
                                         <div class="modal-body">
                                             <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
                                             <?php
+                                            echo "<h5>ให้คะแนนเรื่องนี้</h5>";
+                                            if (!isset($_SESSION['cusid'])) {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            } 
+                                            else {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            }
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
@@ -222,7 +250,24 @@ session_start();
                     <div class="col sm-3">
                         <div class="text-center mb-3">
                             <img src="<?php echo $row['book_cover'] ?>" class="card-img-top" width="200px" height="250px">
-
+                            <?php
+                                $sqlrate = "select book_name,AVG(bscore_score) as rating
+                                from book
+                                inner join bookscore on book_id = bscore_bookid
+                                inner join customer on bscore_cusid = cus_id
+                                where bscore_bookid = '$bookid'
+                                group by bscore_bookid";
+                                $ex_rate = connectdb()->query($sqlrate);
+                                if ($ex_rate->num_rows > 0){
+                                    $row2 = $ex_rate->fetch_assoc();
+                                    $rating = $row2['rating'];
+                                }
+                                else{
+                                    $rating = 0;
+                                }
+                                ?>
+                                <h5 class="card-title text-center">คะแนน <?php echo round($rating)?>/5</h5>
+                                <h5 class="card-title text-center text-danger">โปร <?php echo $row['pro_name'] ?>
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
@@ -337,6 +382,17 @@ session_start();
                                         <div class="modal-body">
                                             <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
                                             <?php
+                                            echo "<h5>ให้คะแนนเรื่องนี้</h5>";
+                                            if (!isset($_SESSION['cusid'])) {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            } 
+                                            else {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            }
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
@@ -365,7 +421,24 @@ session_start();
                     <div class="col sm-3">
                         <div class="text-center mb-3">
                             <img src="<?php echo $row['book_cover'] ?>" class="card-img-top" width="200px" height="250px">
-
+                            <?php
+                                $sqlrate = "select book_name,AVG(bscore_score) as rating
+                                from book
+                                inner join bookscore on book_id = bscore_bookid
+                                inner join customer on bscore_cusid = cus_id
+                                where bscore_bookid = '$bookid'
+                                group by bscore_bookid";
+                                $ex_rate = connectdb()->query($sqlrate);
+                                if ($ex_rate->num_rows > 0){
+                                    $row2 = $ex_rate->fetch_assoc();
+                                    $rating = $row2['rating'];
+                                }
+                                else{
+                                    $rating = 0;
+                                }
+                                ?>
+                                <h5 class="card-title text-center">คะแนน <?php echo round($rating)?>/5</h5>
+                            
                             
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
@@ -482,6 +555,17 @@ session_start();
                                         <div class="modal-body">
                                             <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
                                             <?php
+                                            echo "<h5>ให้คะแนนเรื่องนี้</h5>";
+                                            if (!isset($_SESSION['cusid'])) {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            } 
+                                            else {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            }
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
@@ -544,7 +628,24 @@ session_start();
                                 echo "";
                             }
                             ?>
-
+                            <?php
+                                $sqlrate = "select book_name,AVG(bscore_score) as rating
+                                from book
+                                inner join bookscore on book_id = bscore_bookid
+                                inner join customer on bscore_cusid = cus_id
+                                where bscore_bookid = '$bookid'
+                                group by bscore_bookid";
+                                $ex_rate = connectdb()->query($sqlrate);
+                                if ($ex_rate->num_rows > 0){
+                                    $row2 = $ex_rate->fetch_assoc();
+                                    $rating = $row2['rating'];
+                                }
+                                else{
+                                    $rating = 0;
+                                }
+                                ?>
+                                <h5 class="card-title text-center">คะแนน <?php echo round($rating)?>/5</h5>
+                            <h5 class="card-title text-center text-danger">โปร <?php echo $row['pro_name'] ?>
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
@@ -659,6 +760,17 @@ session_start();
                                         <div class="modal-body">
                                             <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
                                             <?php
+                                            echo "<h5>ให้คะแนนเรื่องนี้</h5>";
+                                            if (!isset($_SESSION['cusid'])) {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            } 
+                                            else {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            }
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
@@ -695,6 +807,24 @@ session_start();
                                 echo "";
                             }
                             ?>
+                            <?php
+                                $sqlrate = "select book_name,AVG(bscore_score) as rating
+                                from book
+                                inner join bookscore on book_id = bscore_bookid
+                                inner join customer on bscore_cusid = cus_id
+                                where bscore_bookid = '$bookid'
+                                group by bscore_bookid";
+                                $ex_rate = connectdb()->query($sqlrate);
+                                if ($ex_rate->num_rows > 0){
+                                    $row2 = $ex_rate->fetch_assoc();
+                                    $rating = $row2['rating'];
+                                }
+                                else{
+                                    $rating = 0;
+                                }
+                                ?>
+                                <h5 class="card-title text-center">คะแนน <?php echo round($rating)?>/5</h5>
+                            
                             <h5 class="card-title text-center">ชื่อเรื่อง</h5>
                             <h5 class="card-title text-center text-success"><?php echo $row['book_name'] ?></h5>
                             <h5 class="card-title text-center">ราคา</h5>
@@ -810,6 +940,17 @@ session_start();
                                         <div class="modal-body">
                                             <img src="<?php echo $row['book_cover'] ?>" width="200px" height="250px" class="mt-5 p-2 my-2 border">
                                             <?php
+                                            echo "<h5>ให้คะแนนเรื่องนี้</h5>";
+                                            if (!isset($_SESSION['cusid'])) {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            } 
+                                            else {
+                                                foreach (range(1, 5) as $rating) {
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                }
+                                            }
                                             echo "<h5>ชื่อเรื่อง</h5>";
                                             echo "<h4>" . $row['book_name'] . "</h4>";
                                             echo "<h5>ราคา</h5>";
