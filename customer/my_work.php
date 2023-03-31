@@ -46,14 +46,47 @@ if (!isset($_SESSION['cusid'])) {
                     <h4>+โปรโมชั่น</h4>
                 </a>
 
-                <a class="btn btn-primary mb-4" href="add_book.php" role="button">
+                <a class="btn btn-primary mb-4 me-2" href="add_book.php" role="button">
                     <h4>+เพิ่มผลงาน</h4>
+                </a>
+
+                <a class="btn btn-warning mb-4 me-2" href="report_bestselling_book.php" role="button">
+                    <h4>ดูรายงาน</h4>
+                </a>
+
+                <a class="btn btn-danger mb-4" href="#" role="button">
+                    <h4>เลือกรอบจ่ายเงิน</h4>
                 </a>
             </div>
         </div>
-        <div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">
-            รายรับที่ได้ 0
-        </div>
+
+        <?php
+        $sqlpub = "select pub_id from publisher inner join customer on cus_id = pub_cusid
+        where pub_cusid = '$cusid'";
+        $ex_pub = connectdb()->query($sqlpub);
+        if ($ex_pub->num_rows > 0) {
+            $row = $ex_pub->fetch_assoc();
+            $pubid = $row['pub_id'];
+
+            $sqltotal = "select nvl(SUM(rec_total),0) as total
+            from receipt inner join receipt_detail on rec_id = recd_recid
+            inner join book on book_id = recd_bookid
+            inner join publisher on pub_id = book_pubid
+            where pub_id = '$pubid'";
+            $ex_total = connectdb()->query($sqltotal);
+            if ($ex_total->num_rows > 0) {
+                $row2 = $ex_total->fetch_assoc();
+                $total = $row2['total'];
+
+        ?>
+        <?php
+            } else {
+                $total = '0';
+            }
+            echo '<div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">ยอดสะสม ' . $total . ' <i class="fas fa-coins"></i></div>';
+        }
+        ?>
+        <div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">ยอดที่ได้รับ 0 <i class="fas fa-coins"></i></div>
         <h4>
             <div>หนังสือของฉัน</div>
         </h4>
@@ -66,7 +99,7 @@ if (!isset($_SESSION['cusid'])) {
             <input class="form-control me-2" id="search2" type="text" placeholder="ชื่อหนังสือ/ผู้เผยแพร่/หมวดหมู่">
         </form>
         <div class="list-group list-group-item-action" id="content2"></div>
-        
+
 
         <script>
             $(document).ready(function() {
