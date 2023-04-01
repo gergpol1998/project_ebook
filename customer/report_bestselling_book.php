@@ -77,65 +77,112 @@ if (!isset($_SESSION['cusid'])) {
                     <h4>ดูรายงาน</h4>
                 </a>
 
-                <a class="btn btn-danger mb-4" href="#" role="button">
-                    <h4>เลือกรอบจ่ายเงิน</h4>
-                </a>
             </div>
         </div>
 
-        <?php
-        $sqlpub = "select pub_id from publisher inner join customer on cus_id = pub_cusid
-        where pub_cusid = '$cusid'";
-        $ex_pub = connectdb()->query($sqlpub);
-        if ($ex_pub->num_rows > 0) {
-            $row = $ex_pub->fetch_assoc();
-            $pubid = $row['pub_id'];
+        <div class="alert alert-primary h4 text-start mb-2 mt-4 " role="alert">
+            <?php
+            $sqlround = "select round_id from round inner join publisher on round_id = pub_round
+            where pub_cusid = '$cusid'";
+            $ex_round = connectdb()->query($sqlround);
+            if ($ex_round->num_rows > 0) {
+                $currentday = date("d");
+                if ("01" !== $currentday) {
+            ?>
+                    <form action="insert_round.php" method="POST">
+                        <label>เลือกรอบรับเงิน</label>
+                        <select name="round" class="form-select mb-2">
+                            <?php
+                            $sqlround = "select * from round";
+                            $ex_round = connectdb()->query($sqlround);
+                            if ($ex_round->num_rows > 0) {
+                                while ($row = $ex_round->fetch_assoc()) {
 
-            $sqltotal = "select nvl(SUM(rec_total),0) as total
-            from receipt inner join receipt_detail on rec_id = recd_recid
-            inner join book on book_id = recd_bookid
-            inner join publisher on pub_id = book_pubid
-            where pub_id = '$pubid'";
-            $ex_total = connectdb()->query($sqltotal);
-            if ($ex_total->num_rows > 0) {
-                $row2 = $ex_total->fetch_assoc();
-                $total = $row2['total'];
+                            ?>
+                                    <option value="<?php echo $row['round_id'] ?>"><?php echo $row['round_num'] ?></option>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </select>
+                        <input type="submit" class="btn btn-primary" name="submit" value="เลือก">
+                    </form>
+                <?php
+                } else {
+                ?>
+                    <form action="insert_round.php" method="POST">
+                        <label>เลือกรอบรับเงิน</label>
+                        <select name="round" class="form-select mb-2" disabled>
+                            <?php
+                            $sqlround = "select * from round";
+                            $ex_round = connectdb()->query($sqlround);
+                            if ($ex_round->num_rows > 0) {
+                                while ($row = $ex_round->fetch_assoc()) {
 
-        ?>
-        <?php
+                            ?>
+                                    <option value="<?php echo $row['round_id'] ?>"><?php echo $row['round_num'] ?></option>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </select>
+                        <input type="submit" class="btn btn-primary" name="submit" value="เลือก" disabled>
+                    </form>
+                <?php
+                }
             } else {
-                $total = '0';
+                ?>
+                <form action="insert_round.php" method="POST">
+                    <label>เลือกรอบรับเงิน</label>
+                    <select name="round" class="form-select mb-2">
+                        <?php
+                        $sqlround = "select * from round";
+                        $ex_round = connectdb()->query($sqlround);
+                        if ($ex_round->num_rows > 0) {
+                            while ($row = $ex_round->fetch_assoc()) {
+
+                        ?>
+                                <option value="<?php echo $row['round_id'] ?>"><?php echo $row['round_num'] ?></option>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </select>
+                    <input type="submit" class="btn btn-primary" name="submit" value="เลือก">
+                </form>
+            <?php
             }
-            echo '<div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">ยอดสะสม ' . $total . ' <i class="fas fa-coins"></i></div>';
-        }
-        ?>
-        <div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">ยอดที่ได้รับ 0 <i class="fas fa-coins"></i></div>
-        
-		<form action="report_bestselling_book.php" method="get">
-			<div class="mb-3">
-				<label for="start_date" class="form-label">วันที่เริ่มต้น</label>
-				<input type="date" class="form-control" id="start_date" name="start_date">
-			</div>
-			<div class="mb-3">
-				<label for="end_date" class="form-label">วันที่สิ้นสุด</label>
-				<input type="date" class="form-control" id="end_date" name="end_date">
-			</div>
-			<button type="submit" class="btn btn-primary">ค้นหา</button>
-		</form>
+            ?>
+        </div>
+        <a class="btn btn-success mb-4 me-2" href="income.php" role="button">
+            <h6>รายได้</h6>
+        </a>
+
+        <form action="report_bestselling_book.php" method="get">
+            <div class="mb-3">
+                <label for="start_date" class="form-label">วันที่เริ่มต้น</label>
+                <input type="date" class="form-control" id="start_date" name="start_date">
+            </div>
+            <div class="mb-3">
+                <label for="end_date" class="form-label">วันที่สิ้นสุด</label>
+                <input type="date" class="form-control" id="end_date" name="end_date">
+            </div>
+            <button type="submit" class="btn btn-primary">ค้นหา</button>
+        </form>
         <?php
-        if (isset($_GET['start_date']) && isset($_GET['end_date'])){
+        if (isset($_GET['start_date']) && isset($_GET['end_date'])) {
             // รับค่าช่วงเวลาจากฟอร์ม
             $start_date = $_GET['start_date'];
             $end_date = $_GET['end_date'];
             $cusid = $_SESSION['cusid'];
-        
+
             $sqlpub = "select pub_id from publisher inner join customer on cus_id = pub_cusid
             where pub_cusid = '$cusid'";
             $ex_pub = connectdb()->query($sqlpub);
             if ($ex_pub->num_rows > 0) {
                 $row = $ex_pub->fetch_assoc();
                 $pubid = $row['pub_id'];
-        
+
                 $col = "*,count(recd_bookid) as total_quantity";
                 $table = "book
                 INNER JOIN receipt_detail ON book.book_id = receipt_detail.recd_bookid
@@ -147,7 +194,7 @@ if (!isset($_SESSION['cusid'])) {
                 $sqlbook = select_where($col, $table, $where);
                 if ($sqlbook->num_rows > 0) {
                     ob_start(); // เริ่มเก็บข้อมูลลงหน่วยความจำ
-                    
+
                     echo '<h2 class="text-center">รายการหนังสือขายดี</h2>';
                     echo '<table class="table">';
                     echo '<thead>';
@@ -172,13 +219,10 @@ if (!isset($_SESSION['cusid'])) {
                     $mpdf->Output("MyReport.pdf");
                     ob_end_flush(); // สิ้นสุดการเก็บข้อมูลลงหน่วยความจำ
                     echo '<a class="btn btn-success mb-4" href="MyReport.pdf" role="button">โหลดรายงาน</a>';
-                    
-                } 
-                else {
+                } else {
                     echo "ไม่พบข้อมูล";
                 }
             }
-            
         }
         connectdb()->close();
         ?>

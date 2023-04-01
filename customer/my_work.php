@@ -53,40 +53,88 @@ if (!isset($_SESSION['cusid'])) {
                 <a class="btn btn-warning mb-4 me-2" href="report_bestselling_book.php" role="button">
                     <h4>ดูรายงาน</h4>
                 </a>
-
-                <a class="btn btn-danger mb-4" href="#" role="button">
-                    <h4>เลือกรอบจ่ายเงิน</h4>
-                </a>
             </div>
         </div>
 
-        <?php
-        $sqlpub = "select pub_id from publisher inner join customer on cus_id = pub_cusid
-        where pub_cusid = '$cusid'";
-        $ex_pub = connectdb()->query($sqlpub);
-        if ($ex_pub->num_rows > 0) {
-            $row = $ex_pub->fetch_assoc();
-            $pubid = $row['pub_id'];
-
-            $sqltotal = "select nvl(SUM(rec_total),0) as total
-            from receipt inner join receipt_detail on rec_id = recd_recid
-            inner join book on book_id = recd_bookid
-            inner join publisher on pub_id = book_pubid
-            where pub_id = '$pubid'";
-            $ex_total = connectdb()->query($sqltotal);
-            if ($ex_total->num_rows > 0) {
-                $row2 = $ex_total->fetch_assoc();
-                $total = $row2['total'];
-
-        ?>
-        <?php
-            } else {
-                $total = '0';
+        <div class="alert alert-primary h4 text-start mb-2 mt-4 " role="alert">
+            <?php
+            $sqlround = "select round_id from round inner join publisher on round_id = pub_round
+            where pub_cusid = '$cusid'";
+            $ex_round = connectdb()->query($sqlround);
+            if ($ex_round->num_rows > 0){
+                $currentday = date("d");
+                if ("01" !== $currentday){
+            ?>
+                    <form action="insert_round.php" method="POST">
+                        <label>เลือกรอบรับเงิน</label>
+                        <select name="round" class="form-select mb-2">
+                        <?php
+                        $sqlround = "select * from round";
+                        $ex_round = connectdb()->query($sqlround);
+                        if ($ex_round->num_rows > 0){
+                            while ($row = $ex_round->fetch_assoc()){
+                                
+                        ?>
+                            <option value="<?php echo $row['round_id']?>"><?php echo $row['round_num']?></option>
+                        <?php
+                        }
+                        }
+                        ?>
+                        </select>
+                        <input type="submit" class="btn btn-primary" name="submit" value="เลือก">
+                    </form>
+                <?php
+                }
+                else{
+                ?>
+                    <form action="insert_round.php" method="POST">
+                        <label>เลือกรอบรับเงิน</label>
+                        <select name="round" class="form-select mb-2" disabled>
+                        <?php
+                        $sqlround = "select * from round";
+                        $ex_round = connectdb()->query($sqlround);
+                        if ($ex_round->num_rows > 0){
+                            while ($row = $ex_round->fetch_assoc()){
+                                
+                        ?>
+                            <option value="<?php echo $row['round_id']?>"><?php echo $row['round_num']?></option>
+                        <?php
+                        }
+                        }
+                        ?>
+                        </select>
+                        <input type="submit" class="btn btn-primary" name="submit" value="เลือก" disabled>
+                    </form>
+                <?php
+                }
             }
-            echo '<div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">ยอดสะสม ' . $total . ' <i class="fas fa-coins"></i></div>';
-        }
-        ?>
-        <div class="alert alert-primary h4 text-start mb-4 mt-4 " role="alert">ยอดที่ได้รับ 0 <i class="fas fa-coins"></i></div>
+            else{
+                ?>
+                    <form action="insert_round.php" method="POST">
+                        <label>เลือกรอบรับเงิน</label>
+                        <select name="round" class="form-select mb-2">
+                        <?php
+                        $sqlround = "select * from round";
+                        $ex_round = connectdb()->query($sqlround);
+                        if ($ex_round->num_rows > 0){
+                            while ($row = $ex_round->fetch_assoc()){
+                                
+                        ?>
+                            <option value="<?php echo $row['round_id']?>"><?php echo $row['round_num']?></option>
+                        <?php
+                        }
+                        }
+                        ?>
+                        </select>
+                        <input type="submit" class="btn btn-primary" name="submit" value="เลือก">
+                    </form>
+            <?php
+            }
+            ?>
+        </div>
+        <a class="btn btn-success mb-4 me-2" href="income.php" role="button">
+            <h6>รายได้</h6>
+        </a>
         <h4>
             <div>หนังสือของฉัน</div>
         </h4>

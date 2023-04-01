@@ -130,7 +130,7 @@ if (!isset($_SESSION['cusid'])) {
                                 $i++;
                                 
                                 ?>
-                            </tbody>
+                        </tbody>
                             <?php
                             }
                             ?>

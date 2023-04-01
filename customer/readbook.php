@@ -22,7 +22,9 @@ if (!isset($_SESSION['cusid'])) {
         $sqlbook = select_where("book_name,book_content","book","book_id = '$bookid'");
         if($sqlbook->num_rows > 0){
             $row = $sqlbook->fetch_assoc();
+            
         }
+
     }
 }
 ?>

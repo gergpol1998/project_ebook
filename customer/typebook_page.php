@@ -186,12 +186,12 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                             if (!isset($_SESSION['cusid'])) {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             } 
                                             else {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             }
                                             echo "<h5>ชื่อเรื่อง</h5>";
@@ -389,12 +389,12 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                             if (!isset($_SESSION['cusid'])) {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             } 
                                             else {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             }
                                             echo "<h5>ชื่อเรื่อง</h5>";
@@ -562,12 +562,12 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                             if (!isset($_SESSION['cusid'])) {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             } 
                                             else {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             }
                                             echo "<h5>ชื่อเรื่อง</h5>";
@@ -769,12 +769,12 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                             if (!isset($_SESSION['cusid'])) {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             } 
                                             else {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             }
                                             echo "<h5>ชื่อเรื่อง</h5>";
@@ -949,12 +949,12 @@ if (isset($_GET['typeid'])&&isset($_GET['typename'])){
                                             echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                             if (!isset($_SESSION['cusid'])) {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             } 
                                             else {
                                                 foreach (range(1, 5) as $rating) {
-                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'>$rating</i> </a>";
+                                                    echo "<a href='rate.php?bookid=" . $row['book_id'] . "&rate=$rating'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                 }
                                             }
                                             echo "<h5>ชื่อเรื่อง</h5>";
