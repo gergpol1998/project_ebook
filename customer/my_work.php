@@ -106,6 +106,7 @@ if (!isset($_SESSION['cusid'])) {
                         <input type="submit" class="btn btn-primary" name="submit" value="เลือก" disabled>
                     </form>
                 <?php
+                echo "<span class= 'text-danger'>เลือกได้อีกทีวันที่ 1 เดือนถัดไป</span>";
                 }
             }
             else{
