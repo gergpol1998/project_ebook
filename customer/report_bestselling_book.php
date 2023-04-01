@@ -62,7 +62,7 @@ if (!isset($_SESSION['cusid'])) {
 
         <div class="d-flex justify-content-between">
             <h2>
-                <div>ผลงานของฉัน</div>
+                <div>รายงานของฉัน</div>
             </h2>
             <div class="d-flex justify-content-end">
                 <a class="btn btn-success mb-4 me-2" href="promotion.php" role="button">
@@ -189,7 +189,7 @@ if (!isset($_SESSION['cusid'])) {
                 INNER JOIN receipt ON receipt.rec_id = receipt_detail.recd_recid
                 INNER JOIN publisher ON publisher.pub_id = book.book_pubid
                 INNER JOIN customer ON customer.cus_id = publisher.pub_cusid";
-                $where = "rec_date BETWEEN '$start_date' AND '$end_date' AND pub_id = '$pubid'
+                $where = "DATE_FORMAT(rec_date, '%Y-%m-%d') BETWEEN '$start_date' AND '$end_date' AND pub_id = '$pubid'
                 GROUP BY recd_bookid";
                 $sqlbook = select_where($col, $table, $where);
                 if ($sqlbook->num_rows > 0) {
