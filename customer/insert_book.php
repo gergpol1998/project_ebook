@@ -56,21 +56,24 @@ if (isset($_POST['submit'])) {
     $current_year = date('Y');
 
     // Create a new folder using the current month and year
-    $new_folder1 = 'uploads/' . $pubid . '/' . $current_year . '/' . $current_month;
-    if (!file_exists($new_folder1)) {
-        mkdir($new_folder1, 0777, true);
+    $new_folder1 = 'uploads/' . $pubid;
+    $folder1 = $new_folder1 . '/' . $current_year . '/' . $current_month;
+    if (!file_exists($folder1)) {
+        mkdir($folder1, 0777, true);
     }
 
     // Create a new folder using the current month and year
-    $new_folder2 = 'pdf/' . $pubid . '/' . $current_year . '/' . $current_month;
-    if (!file_exists($new_folder2)) {
-        mkdir($new_folder2, 0777, true);
+    $new_folder2 = 'pdf/' . $pubid;
+    $folder2 = $new_folder2 . '/' . $current_year . '/' . $current_month;
+    if (!file_exists($folder2)) {
+        mkdir($folder2, 0777, true);
     }
 
     // Create a new folder using the current month and year
-    $new_folder3 = 'test/' . $pubid . '/' . $current_year . '/' . $current_month;
-    if (!file_exists($new_folder3)) {
-        mkdir($new_folder3, 0777, true);
+    $new_folder3 = 'test/' . $pubid;
+    $folder3 = $new_folder3 . '/' . $current_year . '/' . $current_month;
+    if (!file_exists($folder3)) {
+        mkdir($folder3, 0777, true);
     }
 
     if ($file_error === 0 && $file_error2 === 0 && $file_error3 === 0) {
@@ -108,14 +111,14 @@ if (isset($_POST['submit'])) {
         else{
             if (in_array($file_type1, $allowed_types1) && isset($file_type2) && isset($file_type3)) {
                 // Update the file destination to the new folder
-                $cover = $new_folder1 . '/' . $file_name;
+                $cover = $folder1 . '/' . $file_name;
                 move_uploaded_file($file_tmp, $cover);
     
     
-                $content = $new_folder2 . '/' . $file_name2;
+                $content = $folder2 . '/' . $file_name2;
                 move_uploaded_file($file_tmp2, $content);
     
-                $testread = $new_folder3 . '/' . $file_name3;
+                $testread = $folder3 . '/' . $file_name3;
                 move_uploaded_file($file_tmp3, $testread);
     
                 // Insert the new file path into the database
