@@ -50,6 +50,21 @@ if (isset($_POST['submit'])){
                         ';
                     }
                 }
+                else{
+                    $sqlup_pub = "update publisher set pub_round = '$round'
+                    where pub_id = '$pubid'";
+                    $result3 = connectdb()->query($sqlup_pub);
+                    if(!$result3){
+                        die(mysqli_error(connectdb()));
+                    }
+                    else{
+                        echo '
+                        <script>
+                            sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","my_work.php");
+                        </script>
+                        ';
+                    }
+                }
             }
         }
     }
