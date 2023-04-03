@@ -36,24 +36,7 @@ function autoid($label,$max_id,$table,$null_id){
     return $nextId;
     }
 }
-function dateid(){
-    //query MAX ID
-    $sql = "SELECT MAX(date_id) AS LAST_ID FROM date";
-    $result = connectdb()->query($sql);
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-    $maxId = substr($row['LAST_ID'],-15); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
-    
-    if ($maxId == '') {
-        $maxId = '000000000000001';
-    } else {
-        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
-    }
-    $maxId = str_pad($maxId,15,'0',STR_PAD_LEFT);
-    $nextId = $maxId; //นำข้อมูลทั้งหมดมารวมกัน
-    return $nextId;
-    }
-}
+
 function tagautoid(){
     $code = "TAG-"; //กำหนดอักษรนำหน้า
     //query MAX ID

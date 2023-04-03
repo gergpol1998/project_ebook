@@ -26,38 +26,30 @@ if($_POST['submit']){
         die(mysqli_error(connectdb()));
     } 
     else {
-        foreach ($book as $books){
-            $sqldel_bookpro = "delete from bookpro where bpro_bookid = '$books' and bpro_proid = '$proid'";
+        
+            $sqldel_bookpro = "delete from bookpro where bpro_proid = '$proid'";
             $result2 = connectdb()->query($sqldel_bookpro);
-        }
+        
         if(!$result2){
             die(mysqli_error(connectdb()));
         }
-        else{
+        else{    
             foreach ($book as $books){
-                $sqldel_bookpro = "delete from bookpro where bpro_bookid = '$books' and bpro_proid = '$proid'";
-                $result2 = connectdb()->query($sqldel_bookpro);
-            
-                if(!$result2){
+
+                $sqlins_bookpro = "insert into bookpro (bpro_bookid ,bpro_proid)
+                values ('$books','$proid')";
+                $result3 = connectdb()->query($sqlins_bookpro);
+                if(!$result3){
                     die(mysqli_error(connectdb()));
                 }
                 else{
-                    $sqlins_bookpro = "insert into bookpro (bpro_bookid ,bpro_proid)
-                    values ('$books','$proid')";
-                    $result3 = connectdb()->query($sqlins_bookpro);
-                    if(!$result3){
-                        die(mysqli_error(connectdb()));
-                    }
-                    else{
-                        echo '
-                    <script>
-                        sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","promotion.php");
-                    </script>
-                    ';
-                    }
+                    echo '
+                <script>
+                    sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","promotion.php");
+                </script>
+                ';
                 }
-            }
+            }    
         }
     }
 }
-?>

@@ -25,7 +25,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">เข้าสู่ระบบ</button>
                 <hr>
-                <p>ยังไม่มีบัญชี ? <a href="register.php">สมัครสมาชิกที่นี่</a></p>
+                <p>ยังไม่มีบัญชี ? <a href="register.php">สมัครสมาชิกที่นี่</a> ลืมรหัสผ่าน ? <a href="forgot_pass.php">เปลี่ยนรหัสผ่าน</a></p>
               </form>
             </div>
           </div>

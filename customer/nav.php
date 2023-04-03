@@ -110,6 +110,7 @@ connectdb();
 
               ?>
                 <h5 class="text-danger text-center"><?php echo $row['cus_coin'] ?> <i class="fas fa-coins"></i></h5>
+                <li><a class="dropdown-item" href="myinfo.php">ข้อมูลส่วนตัว</a></li>
                 <li><a class="dropdown-item" href="add_coin.php">เติมเหรียญ</a></li>
               <?php
               }

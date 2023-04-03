@@ -4,6 +4,7 @@ connectdb();
 session_start();
 $cusid = $_SESSION["cusid"];
 
+
 echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js' 
 </script>
 <script src = 'https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert-dev.min.js'></script>
@@ -12,15 +13,15 @@ echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js'
 echo "<script src='function.js'></script>";
 
 if (isset($_POST['submit'])) {
-
+    
     $sqlpub = "select * from publisher inner join customer on pub_cusid = cus_id
     where pub_cusid = '$cusid'";
     $ex_pub = connectdb()->query($sqlpub);
     $row = $ex_pub->fetch_assoc();
     $pubid = $row['pub_id'];
-
     //query lastid
     $lastbookid = bookautoid();
+    
 
     $bname = $_POST['bname'];
     $summary = $_POST['summary'];

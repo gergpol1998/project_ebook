@@ -63,11 +63,12 @@ if (!isset($_SESSION['cusid'])) {
             $ex_round = connectdb()->query($sqlround);
             $currentdate = date("d/m");
             $checkdate = "01/" . date("m");
+            $day = date("d");
             if ($ex_round->num_rows > 0) {
                 
                 if ($checkdate === $currentdate) {
                     // Check whether the data has already been inserted
-                    $sql = "SELECT date_day FROM date WHERE DATE_FORMAT(date_day,'%d/%m') = '$currentdate'";
+                    $sql = "SELECT date_date FROM date WHERE date_date = '$day'";
                     $result = connectdb()->query($sql);
                     if ($result->num_rows === 0) {
             ?>
@@ -137,65 +138,6 @@ if (!isset($_SESSION['cusid'])) {
                 <?php
                 }
                 
-            }
-            else {
-                $lastdateid = dateid();
-                $sqlins_date = "insert into date (date_id,date_day)
-                values ('$lastdateid',NOW())";
-                $result = connectdb()->query($sqlins_date);
-                if (!$result) {
-                    die(mysqli_error(connectdb()));
-                } else {
-                    $sqlins_round_date = "insert into round_date (rd_roundid,rd_dateid)
-                    values ('001','$lastdateid')";
-                    $result2 = connectdb()->query($sqlins_round_date);
-                    if (!$result2) {
-                        die(mysqli_error(connectdb()));
-                    } else {
-                        $sqlpub = "select pub_id,pub_round from publisher inner join customer on pub_cusid = cus_id
-                        where pub_cusid = '$cusid'";
-                        $ex_pub = connectdb()->query($sqlpub);
-                        if ($ex_pub->num_rows > 0) {
-                            $row = $ex_pub->fetch_assoc();
-                            $pubid = $row['pub_id'];
-
-                            if ($row['pub_round'] === NULL) {
-                                $sqlup_pub = "update publisher set pub_round = '001'
-                                where pub_id = '$pubid'";
-                                $result3 = connectdb()->query($sqlup_pub);
-                                if (!$result3) {
-                                    die(mysqli_error(connectdb()));
-                                }
-                            }
-                            else{
-                                $sqlup_pub = "update publisher set pub_round = '001'
-                                where pub_id = '$pubid'";
-                                $result3 = connectdb()->query($sqlup_pub);
-                            }
-                        }
-                    }
-                }
-                ?>
-                <form action="insert_round.php" method="POST">
-                    <label>เลือกรอบรับเงิน</label>
-                    <select name="round" class="form-select mb-2" disabled>
-                        <?php
-                        $sqlround = "select * from round";
-                        $ex_round = connectdb()->query($sqlround);
-                        if ($ex_round->num_rows > 0) {
-                            while ($row = $ex_round->fetch_assoc()) {
-
-                        ?>
-                                <option value="<?php echo $row['round_id'] ?>"><?php echo $row['round_num'] ?></option>
-                        <?php
-                            }
-                        }
-                        ?>
-                    </select>
-                    <input type="submit" class="btn btn-primary" name="submit" value="เลือก" disabled>
-                    <span class= 'text-danger'>เลือกได้อีกทีวันที่ 1 เดือนถัดไป</span>
-                </form>
-            <?php
             }
             ?>
         </div>
