@@ -60,7 +60,7 @@ connectdb();
               }
             }
           </script>
-          <li class="nav-item"><a class="nav-link" onclick="registt(this.href); return false;" href="register.php">ชั้นหนังสือ</a></li>
+          <li class="nav-item"><a class="nav-link" onclick="registt(this.href); return false;" href="login.php">ชั้นหนังสือ</a></li>
           <?php
         }
 

@@ -75,7 +75,7 @@ if (!isset($_SESSION['cusid'])) {
                                 $ex_cartpro = connectdb()->query($sqlcart_pro);
                                 
 
-                            ?>
+                                ?>
                                 <tr>
                                     <td>
                                         <?php echo $i; ?>
@@ -94,7 +94,8 @@ if (!isset($_SESSION['cusid'])) {
                                             echo "<del class='text-danger'>$row[book_price]</del>";
                                             echo number_format($row2['discount'], 2);
                                             $sum1 = $sum1 + $row2['discount'];
-                                            //echo $sum1;
+                                            
+                                            
                                         }
                                         else{
                                             echo number_format($price, 2);
@@ -163,6 +164,7 @@ if (!isset($_SESSION['cusid'])) {
                                         
                                             echo "<td class='text-center'><a <a onclick='checkcoin(this.href); return false;' href='add_coin.php'><button type='button' class='btn btn-primary'>ชำระเงิน</button></a></td>";
                                         } else {
+                                
                                             $_SESSION['coin'] = $row2['cus_coin'];
                                             $_SESSION['total'] = $total;
                                 ?>

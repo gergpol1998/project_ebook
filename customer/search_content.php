@@ -111,10 +111,11 @@ $bookid = $_GET['bookid'];
                                                         </script>';
                                                 echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
                                             } else {
+                                               
                                                 $_SESSION['coin'] = $row2['cus_coin'];
                                                 $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
-                                                $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                                if ($sqlcheck->num_rows > 0 || $sqlcart->num_rows > 0) {
+                                                
+                                                if ($sqlcheck->num_rows > 0) {
                                 ?>
                                                     <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
                                                 <?php
@@ -171,9 +172,9 @@ $bookid = $_GET['bookid'];
                                             }
                                         }
                                     </script>
-                                    <a onclick="register(this.href); return false;" href="register.php" class="btn btn-danger mb-2">ชำระเงิน</a>
-                                    <a onclick="register(this.href); return false;" href="register.php" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
-                                    <a onclick="register(this.href); return false;" href="register.php" class="btn btn-warning">เพิ่มเข้าชั้นหนังสือ</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-warning">เพิ่มเข้าชั้นหนังสือ</a>
                                 <?php
                                 }
                                 ?>
@@ -193,7 +194,7 @@ $bookid = $_GET['bookid'];
                                                 echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                                 if (!isset($_SESSION['cusid'])) {
                                                     foreach (range(1, 5) as $rating) {
-                                                        echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
+                                                        echo "<a onclick='register(this.href); return false;' href='login.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                     }
                                                 } 
                                                 else {
@@ -283,10 +284,11 @@ $bookid = $_GET['bookid'];
                                                         </script>';
                                                 echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
                                             } else {
+                                                
                                                 $_SESSION['coin'] = $row2['cus_coin'];
                                                 $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
-                                                $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                                if ($sqlcheck->num_rows > 0 || $sqlcart->num_rows > 0) {
+                                                
+                                                if ($sqlcheck->num_rows > 0 ) {
                                 ?>
                                                     <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
                                                 <?php
@@ -343,9 +345,9 @@ $bookid = $_GET['bookid'];
                                             }
                                         }
                                     </script>
-                                    <a onclick="register(this.href); return false;" href="register.php" class="btn btn-danger mb-2">ชำระเงิน</a>
-                                    <a onclick="register(this.href); return false;" href="register.php" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
-                                    <a onclick="register(this.href); return false;" href="register.php" class="btn btn-warning">เพิ่มเข้าชั้นหนังสือ</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-warning">เพิ่มเข้าชั้นหนังสือ</a>
                                 <?php
                                 }
                                 ?>
@@ -365,7 +367,7 @@ $bookid = $_GET['bookid'];
                                                 echo "<h5>ให้คะแนนเรื่องนี้</h5>";
                                                 if (!isset($_SESSION['cusid'])) {
                                                     foreach (range(1, 5) as $rating) {
-                                                        echo "<a onclick='register(this.href); return false;' href='register.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
+                                                        echo "<a onclick='register(this.href); return false;' href='login.php'> <i class='fas fa-star'><i hidden>$rating</i></i> </a>";
                                                     }
                                                 } 
                                                 else {

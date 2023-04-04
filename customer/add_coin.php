@@ -35,12 +35,19 @@ if (!isset($_SESSION["cusid"])) {
       <div class="mb-3">
         <label for="coin-amount" class="form-label">จำนวนเหรียญ</label>
         <select class="form-select" name="coin-amount">
-          <option value="50">50 เหรียญ</option>
-          <option value="100">100 เหรียญ</option>
-          <option value="200">200 เหรียญ</option>
-          <option value="300">300 เหรียญ</option>
-          <option value="500">500 เหรียญ</option>
-          <option value="1000">1000 เหรียญ</option>
+        <?php
+        $sqlcoin = "select * from coin";
+        $ex_coin = connectdb()->query($sqlcoin);
+        if ($ex_coin->num_rows > 0){
+          
+          while ($row = $ex_coin->fetch_assoc()){
+        ?>
+          <option value="<?php echo $row['coin_amount']?>"><?php echo $row['coin_amount']?></option>
+        <?php
+          }
+        }
+        connectdb()->close();
+        ?>
         </select>
       </div>
       <input type="submit" class="btn btn-primary" value="เติมเหรียญ">

@@ -33,13 +33,28 @@ if (isset($_SESSION['cusid']) && isset($_POST['coin-amount'])){
     if ($sqlcoin->num_rows > 0){
         $row = $sqlcoin->fetch_assoc();
         $sumcoin = $coin + $row['cus_coin'];
-        updatedata("customer","cus_coin = '$sumcoin'","cus_id = '$cusid'");
+        $result = updatedata("customer","cus_coin = '$sumcoin'","cus_id = '$cusid'");
 
-        echo '
-        <script>
-            sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","index.php");
-        </script>
-        ';
+        if (!$result){
+            die(mysqli_error(connectdb()));
+        }
+        else{
+            $last_topid = autoid("TOP-","top_id","topup","0000001");
+            $sqlins_topup = "insert into topup (top_id,top_cusid,top_amount,top_date)
+            values ('$last_topid','$cusid','$coin',NOW())";
+            $result2 = connectdb()->query($sqlins_topup);
+
+            if(!$result2){
+                die(mysqli_error(connectdb()));
+            }
+            else{
+                echo '
+                    <script>
+                        sweetalerts("บันทึกข้อมูลสำเร็จ!!","success","","index.php");
+                    </script>
+                    ';
+            }
+        }
     }
    }
 }

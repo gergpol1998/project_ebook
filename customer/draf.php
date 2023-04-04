@@ -185,6 +185,7 @@ if (!isset($_SESSION['cusid'])) {
         inner join customer on cus_id = pub_cusid";
         $where = "pub_cusid = '$cusid' and book_status = '0' ORDER BY book_dateup DESC";
         $sqlbook = select_where($col, $table, $where);
+
         ?>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
             <?php
@@ -220,6 +221,16 @@ if (!isset($_SESSION['cusid'])) {
                                 }
                             </script>
                             <a onclick="sendbook(this.href); return false;" href="waitapp.php?bookid=<?php echo $row['book_id'] ?>"><button type="button" class="btn btn-success">ส่ง</button></a>
+
+                            <script>
+                                function deleted(mydraf) {
+                                    let agree = confirm("ยืนยันการลบ");
+                                    if (agree) {
+                                        window.location = mydraf;
+                                    }
+                                }
+                            </script>
+                            <a onclick="deleted(this.href); return false;" href="delete_book.php?bookid=<?php echo $row['book_id'] ?>"><button type="button" class="btn btn-danger">ลบ</button></a>
                             <!-- Modal -->
                             <div class="modal fade" id="<?php echo $row['book_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">

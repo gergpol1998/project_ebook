@@ -24,12 +24,22 @@ function autoid($label,$max_id,$table,$null_id){
     $result = connectdb()->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-    $maxId = substr($row['LAST_ID'],-7); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+        $maxId = substr($row['LAST_ID'],-7); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
     
     if ($maxId == '') {
         $maxId = $null_id;
     } else {
-        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+            $lastyear = substr($row['LAST_ID'],4,-9);
+            $lastmonth = substr($row['LAST_ID'],6,-7);
+            $currentyear = substr(date("Y") + 543, -2);
+            $currentmonth = date("m");
+
+            if ($lastyear !== $currentyear || $lastmonth !== $currentmonth){
+                $maxId = $null_id;
+            }
+            else{
+                $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+            }
     }
     $maxId = str_pad($maxId,7,'0',STR_PAD_LEFT);
     $nextId = $code . $yearMonth . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
@@ -64,16 +74,26 @@ function bookautoid(){
     $result = connectdb()->query($sql);
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-    $maxId = substr($row['LAST_ID'],-6); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
+        $maxId = substr($row['LAST_ID'],-6); //ดึงค่าไอดีล่าสุดจากตารางข้อมูลที่จะบันทึก
     
-    if ($maxId == '') {
-        $maxId = "000001";
-    } else {
-        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
-    }
-    $maxId = str_pad($maxId,6,'0',STR_PAD_LEFT);
-    $nextId = $code . $yearMonth . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
-    return $nextId;
+        if ($maxId == '') {
+            $maxId = "000001";
+        } else {
+            $lastyear = substr($row['LAST_ID'],5,-8);
+            $lastmonth = substr($row['LAST_ID'],7,-6);
+            $currentyear = substr(date("Y") + 543, -2);
+            $currentmonth = date("m");
+
+            if ($lastyear !== $currentyear || $lastmonth !== $currentmonth){
+                $maxId = "000001";
+            }
+            else{
+                $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+            }
+        }
+        $maxId = str_pad($maxId,6,'0',STR_PAD_LEFT);
+        $nextId = $code . $yearMonth . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
+        return $nextId;
     }
 }
 function receiptautoid(){
@@ -89,7 +109,17 @@ function receiptautoid(){
     if ($maxId == '') {
         $maxId = "00001";
     } else {
-        $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+            $lastyear = substr($row['LAST_ID'],4,-9);
+            $lastmonth = substr($row['LAST_ID'],6,-7);
+            $currentyear = substr(date("Y") + 543, -2);
+            $currentmonth = date("m");
+
+            if ($lastyear !== $currentyear || $lastmonth !== $currentmonth){
+                $maxId = "000001";
+            }
+            else{
+                $maxId = ($maxId + 1);  //บวกค่าเพิ่มอีก 1
+            }
     }
     $maxId = str_pad($maxId,5,'0',STR_PAD_LEFT);
     $nextId = $code . $yearMonth . $maxId; //นำข้อมูลทั้งหมดมารวมกัน
