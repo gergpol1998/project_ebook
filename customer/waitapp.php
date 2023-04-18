@@ -34,9 +34,11 @@ if (!isset($_SESSION['cusid'])) {
 <body>
     <?php
     include "nav.php";
-    if (isset($_GET['bookid'])) {
+    $book=$_GET['bookid'];
+    if (isset($book)) {
         $bookid = $_GET['bookid'];
         updatedata("book", "book_status = '1'", "book_id = '$bookid'");
+        $book=null;
     }
     ?>
     <div class="container px-4 px-lg-5 mt-3">
@@ -46,9 +48,31 @@ if (!isset($_SESSION['cusid'])) {
                 <div>ผลงานของฉัน</div>
             </h2>
             <div class="d-flex justify-content-end">
-                <a class="btn btn-success mb-4 me-2" href="promotion.php" role="button">
-                    <h4>+โปรโมชั่น</h4>
-                </a>
+            <?php
+                $sqlcheckpro = "select book_id from book
+                inner join publisher on pub_id = book_pubid
+                inner join customer on cus_id = pub_cusid
+                where pub_cusid = '$cusid' and book_status = '2'";
+                $ex_sqlcheckpro = connectdb()->query($sqlcheckpro);
+                if ($ex_sqlcheckpro->num_rows > 0){
+                    echo '<a class="btn btn-success mb-4 me-2" href="promotion.php" role="button">
+                        <h4>โปรโมชั่น</h4>
+                    </a>' ;
+                }
+                else{
+                ?>
+                <script>
+                    function adds(mypage) {
+                    let agree = confirm("ยังไม่มีหนังสือที่เผยแพร่");
+                        if (agree) {
+                        window.location = mypage;
+                        }
+                    }
+                </script>
+                <a class="btn btn-success mb-4 me-2" onclick="adds(this.href); return false;" href="my_work.php"><h4>โปรโมชั่น</h4></a>
+                <?php
+                }
+                ?>
 
                 <a class="btn btn-primary mb-4 me-2" href="add_book.php" role="button">
                     <h4>+เพิ่มผลงาน</h4>
@@ -154,7 +178,7 @@ if (!isset($_SESSION['cusid'])) {
         <div class="mb-3">
             <a href="my_work.php"><button type="button" class="btn btn-outline-success">อนุมัติ</button></a>
             <a href="draf.php"><button type="button" class="btn btn-outline-success">ฉบับร่าง</button></a>
-            <a href="waitapp.php"><button type="button" class="btn btn-outline-success">รออนุมัติ</button></a>
+            <a href="waitapp.php"><button type="button" class="btn btn-success">รออนุมัติ</button></a>
         </div>
         <form method="POST" class="form-inline d-flex">
             <input class="form-control me-2" id="search4" type="text" placeholder="ชื่อหนังสือ/ผู้เผยแพร่/หมวดหมู่">
@@ -214,13 +238,13 @@ if (!isset($_SESSION['cusid'])) {
                             ?>
                             <!-- Button trigger modal -->
                             <a href='readbook.php?bookid=<?php echo $row['book_id'] ?>'><button class='btn btn-danger'>อ่าน</button></a>
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">รายละเอียด</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">เรื่องย่อ</button>
                             <!-- Modal -->
                             <div class="modal fade" id="<?php echo $row['book_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel">รายละเอียด</h1>
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel">เรื่องย่อ</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -232,7 +256,7 @@ if (!isset($_SESSION['cusid'])) {
                                             echo "<h5>ราคา</h5>";
                                             echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . " <i class='fas fa-coins'></i></h4>";
                                             echo "<h5>เนื้อเรื่องย่อ</h5>";
-                                            echo "<p>" . $row['book_summary'] . "</p>";
+                                            echo "<textarea class='form-control'>" . $row['book_summary'] . "</textarea>";
                                             echo "<h5>ผู้เผยแพร่</h5>";
                                             echo "<h4>" . $row['pub_name'] . "</h4>";
                                             echo "<a href='testread.php?bookid=" . $row['book_id'] . "'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";

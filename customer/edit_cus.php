@@ -58,11 +58,6 @@ if (!isset($_SESSION['cusid'])) {
                     <input type="text" name="fname" value="<?php echo $row['cus_name']?>" class="form-control" require>
                     <label>นามสกุล</label>
                     <input type="text" name="lname" value="<?php echo $row['cus_lname']?>" class="form-control" require>
-                    <label>username</label>
-                    <input type="text" name="username" value="<?php echo $row['cus_uname']?>" class="form-control" id="username" require>
-                    <span id="username_availability"></span><br>
-                    <label>password</label>
-                    <input type="password" name="password"  class="form-control" require>
                     <?php
                     // เช็คเพศแล้วกำหนด checked ให้กับ input tag ตามค่าที่ได้จากฐานข้อมูล
                     switch ($gender) {
@@ -102,7 +97,7 @@ if (!isset($_SESSION['cusid'])) {
                     <input type="date" name="bdate" value="<?php echo $row['cus_bdate']?>" class="form-control" require>
                     <label>เบอร์โทรศัพท์</label>
                     <input type="text" name="tel" value="<?php echo $row['cus_tel']?>" class="form-control mb-3" required id="txt_telephone" maxlength="10" require>
-                    <input type="submit" class="btn btn-primary" name="submit" value="แก้ไขข้อมูล" id="register" disabled>
+                    <input type="submit" class="btn btn-primary" name="submit" value="แก้ไขข้อมูล">
                     <input type="reset" class="btn btn-danger" name="cancel" value="ยกเลิก"><br><br>
                 </form>
                 </form>
@@ -116,23 +111,6 @@ if (!isset($_SESSION['cusid'])) {
     <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
 <script>
     $(document).ready(function() {
-    $('#username').on('blur', function() {
-        var username = $(this).val();
-        $.ajax({
-            url: 'check_availability.php',
-            type: 'POST',
-            data: {username: username},
-            success: function(response) {
-                if (response == 'taken') {
-                    $('#username_availability').html('<span class="text-danger"> This username is already taken </span>');
-                    $('#register').attr("disabled", true);
-                } else if (response == 'available') {
-                    $('#username_availability').html('<span class="text-success"> This username is available </span>');
-                    $('#register').attr("disabled", false);
-                }
-            }
-        });
-    });
     
     $('#email').on('blur', function() {
         var email = $(this).val();
@@ -143,10 +121,8 @@ if (!isset($_SESSION['cusid'])) {
             success: function(response) {
                 if (response == 'taken') {
                     $('#email_availability').html('<span class="text-danger">This email is already taken </span>');
-                    $('#register').attr("disabled", true);
                 } else if (response == 'available') {
                     $('#email_availability').html('<span class="text-success">This email is available</span>');
-                    $('#register').attr("disabled", false);
                 }
             }
         });

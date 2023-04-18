@@ -61,7 +61,7 @@ else{
                 <div class="alert alert-primary h4 text-center mb-4 mt-4 " role="alert">
                     ดูโปรโมชั่น
                 </div>
-                <form method="POST" action="update_promotion.php">
+                <form>
                     <label>ชื่อโปรโมชั่น</label>
     
                     <input type="text" name="proname" class="form-control" value="<?php echo $row['pro_name']?>" readonly>
@@ -101,8 +101,7 @@ else{
                 }
                 connectdb()->close();
                     ?><br><br>
-                    <input type="submit" class="btn btn-primary" name="submit" value="แก้ไขโปรโมชั่น">
-                    <input type="reset" class="btn btn-danger" name="cancel" value="ยกเลิก"><br><br>
+                    
                 </form>
             </div>
         </div>

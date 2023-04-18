@@ -149,7 +149,7 @@ if (!isset($_SESSION['cusid'])) {
         </h4>
         <div class="mb-3">
             <a href="promotion.php"><button type="button" class="btn btn-outline-success">โปรโมชั่นที่ใช้งานได้</button></a>
-            <a href="end_promotion.php"><button type="button" class="btn btn-outline-success">โปรโมชั่นที่หมดอายุ</button></a>
+            <a href="end_promotion.php"><button type="button" class="btn btn-success">โปรโมชั่นที่หมดอายุ</button></a>
         </div>
 
         <div class="row">

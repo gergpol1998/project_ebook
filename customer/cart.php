@@ -59,19 +59,21 @@ if (!isset($_SESSION['cusid'])) {
                         $sum1 = 0;
                         $sum2 = 0;
 
-
-                        $sqlcart = "select *from book inner join cart on book_id = cart_bookid
+                        
+                        $sqlcart = "select * from book inner join cart on book_id = cart_bookid
                         where book_status = '2' and cart_cusid = '$cusid'";
+
                         $result = connectdb()->query($sqlcart);
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $bookid = $row['book_id'];
                                 $price = $row['book_price'];
+                                $proid = $row['cart_proid'];
                                 
                                 $sqlcart_pro = "select *,book_price - pro_discount as discount
                                 from promotion inner join bookpro on pro_id = bpro_proid 
                                 inner join book on bpro_bookid = book_id
-                                where bpro_bookid = '$bookid' and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
+                                where (bpro_bookid = '$bookid'and bpro_proid = '$proid') and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
                                 $ex_cartpro = connectdb()->query($sqlcart_pro);
                                 
 
@@ -175,7 +177,7 @@ if (!isset($_SESSION['cusid'])) {
                 
                                 }
                 ?>
-                <td><a href='cancle_cart.php?act=cancle'><button type='button' class='btn btn-danger'>ยกเลิกสินค้า</button></a></td>
+                <td><a href='cancle_cart.php?act=cancle'><button type='button' class='btn btn-danger'>ล้างตะกร้า</button></a></td>
                     </tr>
                 </table>
             </div>

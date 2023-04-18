@@ -2,9 +2,9 @@
 //connect db
 function connectdb(){
     $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $db = "ebook";
+    $username = "u185154602_gergpol";
+    $password = "Gergpol123";
+    $db = "u185154602_ebook";
     
     // Create connection
     $conn = new mysqli($servername, $username, $password ,$db);

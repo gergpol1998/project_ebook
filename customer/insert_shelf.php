@@ -13,10 +13,21 @@ if (isset($_GET['bookid']) && isset($_SESSION['cusid'])){
     
     $bookid = $_GET['bookid'];
     $cusid = $_SESSION['cusid'];
+    if (isset($_GET['pro'])){
+        $proid = $_GET['pro'];
 
-    $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status)
-        values ('$bookid','$cusid','0')";
+        $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status,bshelf_proid)
+        values ('$bookid','$cusid','0','$proid')";
         $result = connectdb()->query($sqlinsert_shelf);
+    }
+    else{
+        $sqlinsert_shelf = "insert into bookshelf (bshelf_bookid,bshelf_cusid,bshelf_status,bshelf_proid)
+        values ('$bookid','$cusid','0',NULL)";
+        $result = connectdb()->query($sqlinsert_shelf);
+    }
+
+
+        
 
         if ($result) {
             echo '

@@ -53,7 +53,7 @@ else{
                 <form method="POST" action="insert_promotion.php">
                     <label>ชื่อโปรโมชั่น</label>
                     <input type="text" name="proname" class="form-control" required>
-                    <label>ส่วนลด</label>
+                    <label>ส่วนลด (เหรียญ)</label>
                     <input type="number" name="discount" class="form-control" required>
                     <label>วันที่เริ่มต้น</label>
                     <input type="date" name="sdate" class="form-control" required>
@@ -71,7 +71,7 @@ else{
                     }
                     ?><br><br>
                     <input type="submit" class="btn btn-primary" name="submit" value="เพิ่มโปรโมชั่น">
-                    <input type="reset" class="btn btn-danger" name="cancel" value="ยกเลิก"><br><br>
+                    <input type="reset" class="btn btn-danger" name="cancel" value="ล้าง"><br><br>
                 </form>
             </div>
         </div>

@@ -1,9 +1,8 @@
 <?php
 session_start();
-if (isset($_SESSION['error'])){
+if (isset($_SESSION['error'])) {
     $error = $_SESSION['error'];
-}
-else{
+} else {
     $error = '';
 }
 ?>
@@ -31,15 +30,22 @@ else{
                 <div class="alert alert-primary h4 text-center mb-4 mt-4 " role="alert">
                     เปลี่ยนรหัสผ่าน
                 </div>
+                <a href="login.php"><button class="btn btn-danger mb-2" >ยกเลิก</button></a>
                 <form method="POST" action="check_email.php">
+                    <label>Username</label>
+                    <input type="text" name="uname" class="form-control" required>
                     <label>อีเมล</label>
                     <input type="text" name="email" class="form-control" required>
-                    <span class="text-danger"><?php echo $error?></span><br>
+                    <span class="text-danger">
+                        <?php echo $error ?>
+                    </span><br>
                     <input type="submit" class="btn btn-primary" name="submit" value="ส่ง">
-                    <input type="reset" class="btn btn-danger" name="cancel" value="ยกเลิก"><br><br>
+                    <input type="reset" class="btn btn-danger" name="cancel" value="ล้าง"><br><br>
+                    
                 </form>
             </div>
         </div>
     </div>
 </body>
+
 </html>

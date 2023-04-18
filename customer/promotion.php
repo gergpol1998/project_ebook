@@ -45,7 +45,7 @@ if (!isset($_SESSION['cusid'])) {
                 <a class="btn btn-success mb-4 me-2" href="add_promotion.php" role="button">
                     <h4>+เพิ่มโปรโมชั่น</h4>
                 </a>
-
+                
                 <a class="btn btn-primary mb-4 me-2" href="add_book.php" role="button">
                     <h4>+เพิ่มผลงาน</h4>
                 </a>
@@ -148,7 +148,7 @@ if (!isset($_SESSION['cusid'])) {
             <div>โปรโมชั่นของฉัน</div>
         </h4>
         <div class="mb-3">
-            <a href="promotion.php"><button type="button" class="btn btn-outline-success">โปรโมชั่นที่ใช้งานได้</button></a>
+            <a href="promotion.php"><button type="button" class="btn btn-success">โปรโมชั่นที่ใช้งานได้</button></a>
             <a href="end_promotion.php"><button type="button" class="btn btn-outline-success">โปรโมชั่นที่หมดอายุ</button></a>
         </div>
 

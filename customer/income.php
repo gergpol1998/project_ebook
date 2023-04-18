@@ -42,9 +42,31 @@ if (!isset($_SESSION['cusid'])) {
                 <div>รายได้ของฉัน</div>
             </h2>
             <div class="d-flex justify-content-end">
-                <a class="btn btn-success mb-4 me-2" href="promotion.php" role="button">
-                    <h4>+โปรโมชั่น</h4>
-                </a>
+            <?php
+                $sqlcheckpro = "select book_id from book
+                inner join publisher on pub_id = book_pubid
+                inner join customer on cus_id = pub_cusid
+                where pub_cusid = '$cusid' and book_status = '2'";
+                $ex_sqlcheckpro = connectdb()->query($sqlcheckpro);
+                if ($ex_sqlcheckpro->num_rows > 0){
+                    echo '<a class="btn btn-success mb-4 me-2" href="promotion.php" role="button">
+                        <h4>โปรโมชั่น</h4>
+                    </a>' ;
+                }
+                else{
+                ?>
+                <script>
+                    function adds(mypage) {
+                    let agree = confirm("ยังไม่มีหนังสือที่เผยแพร่");
+                        if (agree) {
+                        window.location = mypage;
+                        }
+                    }
+                </script>
+                <a class="btn btn-success mb-4 me-2" onclick="adds(this.href); return false;" href="my_work.php"><h4>โปรโมชั่น</h4></a>
+                <?php
+                }
+                ?>
 
                 <a class="btn btn-primary mb-4 me-2" href="add_book.php" role="button">
                     <h4>+เพิ่มผลงาน</h4>
@@ -78,9 +100,9 @@ if (!isset($_SESSION['cusid'])) {
                     <?php
                     $i = 1;
                     $total = 0;
-                    $sqlpub = "select DATE_FORMAT(inc_month,'%d/%Y') as date,inc_amount from publisher inner join income on pub_id = inc_pubid
+                    $sqlpub = "select DATE_FORMAT(inc_date,'%d/%Y') as date,inc_amount from publisher inner join income on pub_id = inc_pubid
                     inner join customer on pub_cusid = cus_id
-                    where pub_cusid = '$cusid' and DATE_FORMAT(inc_month,'%Y') = DATE_FORMAT(CURDATE(), '%Y')";
+                    where pub_cusid = '$cusid' and DATE_FORMAT(inc_date,'%Y') = DATE_FORMAT(CURDATE(), '%Y')";
                     $ex_pub = connectdb()->query($sqlpub);
                     if ($ex_pub->num_rows > 0){
                         while($row = $ex_pub->fetch_assoc()){

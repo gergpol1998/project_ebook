@@ -9,8 +9,8 @@ if($_POST['submit']){
     $pubacc = $_POST['pubacc'];
     $lastid = autoid("PUB-","pub_id","publisher","0000001");
 
-    $values = "pub_id,pub_name,pub_account,pub_date,pub_cusid,pub_bankid,pub_round";
-    $data = "'$lastid','$name','$pubacc',NOW(),'$cusid','$bankid','ROU-001'";
+    $values = "pub_id,pub_name,pub_account,pub_date,pub_cusid,pub_bankid,pub_round,pub_dinc,pub_instatus";
+    $data = "'$lastid','$name','$pubacc',NOW(),'$cusid','$bankid','ROU-001',NOW(),'0'";
     $result = insertdata("publisher",$values,$data);
 
     echo "<script> src ='https://code.jquery.com/jquery-3.6.1.min.js' 

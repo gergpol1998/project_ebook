@@ -46,7 +46,7 @@ if (!isset($_SESSION['cusid'])) {
             <div>ชั้นหนังสือ</div>
         </h4>
         <div class="mb-3">
-            <a href="shelf.php"><button type="button" class="btn btn-outline-success">ยังไม่ได้เป็นเจ้าของ</button></a>
+            <a href="shelf.php"><button type="button" class="btn btn-success">ยังไม่ได้เป็นเจ้าของ</button></a>
             <a href="mybook.php"><button type="button" class="btn btn-outline-success">เป็นเจ้าของ</button></a>
         </div>
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 ">
@@ -59,12 +59,13 @@ if (!isset($_SESSION['cusid'])) {
             if ($ex_book->num_rows > 0) {
                 while ($row = $ex_book->fetch_assoc()) {
 
-                    $bookid = $row['book_id'];
+                    $proid = $row['bshelf_proid'];
+                    $bookid = $row['bshelf_bookid'];
                     $sqlpro = "select *,book_price - pro_discount as discount,date_format(pro_edate,'%d/%m/%Y') as pro_edate
                     from promotion inner join bookpro on pro_id = bpro_proid 
                     inner join book on bpro_bookid = book_id
                     inner join publisher on pub_id = book_pubid
-                    where book_id = '$bookid' and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
+                    where book_id = '$bookid' and pro_id = '$proid' and book_status = '2' and pro_edate >= CURDATE()+ INTERVAL 1 DAY";
                     $ex_pro = connectdb()->query($sqlpro);
                     if ($ex_pro->num_rows > 0) {
                         $row = $ex_pro->fetch_assoc();
@@ -106,7 +107,8 @@ if (!isset($_SESSION['cusid'])) {
 
                                             $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
                                             if ($sqlcheck->num_rows > 0) {
-                                                echo '<button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>';
+                                                $id = $row['book_id'];
+                                                echo "<a href='testread.php?bookid=$id'><button class='btn btn-primary mb-2' >ทดลองอ่าน</button></a>";
                                             } else {
 
                                                 if ($row2['cus_coin'] < $row['discount']) {
@@ -118,7 +120,7 @@ if (!isset($_SESSION['cusid'])) {
                                                                 }
                                                             }
                                                         </script>';
-                                                    echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
+                                                    echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-primary mb-2">ชำระเงิน</a>';
                                                 } else {
                                                     
                                                     $_SESSION['coin'] = $row2['cus_coin'];
@@ -126,13 +128,13 @@ if (!isset($_SESSION['cusid'])) {
                                                     
                                                     if ($sqlcheck->num_rows > 0 ) {
                                     ?>
-                                                        <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
+                                                        
                                                     <?php
                                                     } else {
 
 
                                                     ?>
-                                                        <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&discount=<?php echo $row['discount'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                        <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&discount=<?php echo $row['discount'] ?>" class="btn btn-primary mb-2">ชำระเงิน</a>
                                         <?php
                                                     }
                                                 }
@@ -142,25 +144,14 @@ if (!isset($_SESSION['cusid'])) {
                                         ?>
                                         <?php
                                         $sql = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
-                                        $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                        if ($sql->num_rows > 0 || $sqlcart->num_rows > 0) {
-
-                                        ?>
-                                            <button class="btn btn-primary mb-2" disabled>เพิ่มเข้าตะกร้า</button>
-                                        <?php
-                                        } else {
-
-                                        ?>
-                                            <a href="insert_cart.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
-                                        <?php
-                                        }
+                                        
                                         $sqlshelf = "select * from bookshelf
                                         where bshelf_bookid = '" . $row['book_id'] . "' and bshelf_cusid = '$cusid'";
                                         $result = connectdb()->query($sqlshelf);
                                         if ($result->num_rows > 0) {
 
                                         ?>
-                                            <button class="btn btn-warning mb-2" disabled>เพิ่มเข้าชั้นหนังสือ</button>
+                                            
                                         <?php
                                         } else {
                                         ?>
@@ -181,14 +172,14 @@ if (!isset($_SESSION['cusid'])) {
                                                 }
                                             }
                                         </script>
-                                        <a onclick="register(this.href); return false;" href="login.php" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                        <a onclick="register(this.href); return false;" href="login.php" class="btn btn-primary mb-2">ชำระเงิน</a>
                                         <a onclick="register(this.href); return false;" href="login.php" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
                                         <a onclick="register(this.href); return false;" href="login.php" class="btn btn-warning">เพิ่มเข้าชั้นหนังสือ</a>
                                     <?php
                                     }
                                     ?>
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">รายละเอียด</button>
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">เรื่องย่อ</button>
                                     <script>
                                         function canclebook(cancle) {
                                             let agreecancle = confirm("ต้องการลบ");
@@ -203,7 +194,7 @@ if (!isset($_SESSION['cusid'])) {
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">รายละเอียด</h1>
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">เรื่องย่อ</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -224,7 +215,7 @@ if (!isset($_SESSION['cusid'])) {
                                                     echo "<h5>ราคา</h5>";
                                                     echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . " <i class='fas fa-coins'></i></h4>";
                                                     echo "<h5>เนื้อเรื่องย่อ</h5>";
-                                                    echo "<p>" . $row['book_summary'] . "</p>";
+                                                    echo "<textarea class='form-control'>" . $row['book_summary'] . "</textarea>";
                                                     echo "<h5>ผู้เผยแพร่</h5>";
                                                     echo "<h4>" . $row['pub_name'] . "</h4>";
                                                     echo "<a href='testread.php?bookid=" . $row['book_id'] . "'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";
@@ -280,7 +271,8 @@ if (!isset($_SESSION['cusid'])) {
 
                                         $sqlcheck = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
                                         if ($sqlcheck->num_rows > 0) {
-                                            echo '<button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>';
+                                            $id = $row['book_id'];
+                                                echo "<a href='testread.php?bookid=$id'><button class='btn btn-primary mb-2' >ทดลองอ่าน</button></a>";
                                         } else {
 
                                             if ($row2['cus_coin'] < $row['book_price']) {
@@ -292,7 +284,7 @@ if (!isset($_SESSION['cusid'])) {
                                                                 }
                                                             }
                                                         </script>';
-                                                echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-danger mb-2">ชำระเงิน</a>';
+                                                echo '<a onclick="checkcoin(this.href); return false;" href="add_coin.php" class="btn btn-primary mb-2">ชำระเงิน</a>';
                                             } else {
                                                 
                                                 $_SESSION['coin'] = $row2['cus_coin'];
@@ -300,13 +292,13 @@ if (!isset($_SESSION['cusid'])) {
                                                 
                                                 if ($sqlcheck->num_rows > 0 ) {
                                 ?>
-                                                    <button class="btn btn-danger mb-2" disabled>ชำระเงิน</button>
+                                                    
                                                 <?php
                                                 } else {
 
 
                                                 ?>
-                                                    <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&price=<?php echo $row['book_price'] ?>" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                                    <a href="insert_pay.php?bookid=<?php echo $row['book_id'] ?>&price=<?php echo $row['book_price'] ?>" class="btn btn-primary mb-2">ชำระเงิน</a>
                                     <?php
                                                 }
                                             }
@@ -316,25 +308,14 @@ if (!isset($_SESSION['cusid'])) {
                                     ?>
                                     <?php
                                     $sql = select_where("*", "bookshelf", "bshelf_cusid = '$cusid' and bshelf_bookid = '" . $row['book_id'] . "' and bshelf_status = '1'");
-                                    $sqlcart = select_where("*", "cart", "cart_cusid = '$cusid' and cart_bookid = '" . $row['book_id'] . "'");
-                                    if ($sql->num_rows > 0 || $sqlcart->num_rows > 0) {
-
-                                    ?>
-                                        <button class="btn btn-primary mb-2" disabled>เพิ่มเข้าตะกร้า</button>
-                                    <?php
-                                    } else {
-
-                                    ?>
-                                        <a href="insert_cart.php?bookid=<?php echo $row['book_id'] ?>" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
-                                    <?php
-                                    }
+                                    
                                     $sqlshelf = "select * from bookshelf
                                         where bshelf_bookid = '" . $row['book_id'] . "' and bshelf_cusid = '$cusid'";
                                     $result = connectdb()->query($sqlshelf);
                                     if ($result->num_rows > 0) {
 
                                     ?>
-                                        <button class="btn btn-warning mb-2" disabled>เพิ่มเข้าชั้นหนังสือ</button>
+                                        
                                     <?php
                                     } else {
                                     ?>
@@ -355,14 +336,14 @@ if (!isset($_SESSION['cusid'])) {
                                             }
                                         }
                                     </script>
-                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-danger mb-2">ชำระเงิน</a>
+                                    <a onclick="register(this.href); return false;" href="login.php" class="btn btn-primary mb-2">ชำระเงิน</a>
                                     <a onclick="register(this.href); return false;" href="login.php" class="btn btn-primary mb-2">เพิ่มเข้าตะกร้า</a>
                                     <a onclick="register(this.href); return false;" href="login.php" class="btn btn-warning">เพิ่มเข้าชั้นหนังสือ</a>
                                 <?php
                                 }
                                 ?>
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">รายละเอียด</button>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">เรื่องย่อ</button>
                                 <script>
                                     function canclebook(cancle) {
                                         let agreecancle = confirm("ต้องการลบ");
@@ -377,7 +358,7 @@ if (!isset($_SESSION['cusid'])) {
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">รายละเอียด</h1>
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">เรื่องย่อ</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -398,7 +379,7 @@ if (!isset($_SESSION['cusid'])) {
                                                 echo "<h5>ราคา</h5>";
                                                 echo "<h4 class= 'text-danger'>" . number_format($row['book_price'], 2) . " <i class='fas fa-coins'></i></h4>";
                                                 echo "<h5>เนื้อเรื่องย่อ</h5>";
-                                                echo "<p>" . $row['book_summary'] . "</p>";
+                                                echo "<textarea class='form-control'>" . $row['book_summary'] . "</textarea>";
                                                 echo "<h5>ผู้เผยแพร่</h5>";
                                                 echo "<h4>" . $row['pub_name'] . "</h4>";
                                                 echo "<a href='testread.php?bookid=" . $row['book_id'] . "'><button class='btn btn-primary'>ทดลองอ่าน</button></a>";

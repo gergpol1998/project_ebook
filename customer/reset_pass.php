@@ -33,13 +33,12 @@ else{
                     เปลี่ยนรหัสผ่าน
                 </div>
                 <form method="POST" action="update_pass.php">
-                    <label>รหัสผ่าน</label>
-                    <input type="text" name="pass1" class="form-control" required>
+                    <label>รหัสผ่านใหม่</label>
+                    <input type="password" name="pass1" class="form-control" required>
                     <label>ยืนยันรหัสผ่าน</label>
-                    <input type="text" name="pass2" class="form-control" required>
+                    <input type="password" name="pass2" class="form-control" required>
                     <span class="text-danger"><?php echo $error?></span><br>
                     <input type="submit" class="btn btn-primary" name="submit" value="เปลี่ยนรหัส">
-                    <input type="reset" class="btn btn-danger" name="cancel" value="ยกเลิก"><br><br>
                 </form>
             </div>
         </div>

@@ -16,9 +16,10 @@ if ($_POST['submit']){
 
     if ($pass1 === $pass2){
         $email = $_SESSION['email'];
+        $uname = $_SESSION['uname'];
         $password = hash('sha512',$pass1);
         $sqlup_pass = "update customer set cus_pass = '$password'
-        where cus_email = '$email'";
+        where cus_uname = '$uname' and cus_email = '$email'";
         $ex_pass = connectdb()->query($sqlup_pass);
 
         if (!$ex_pass){
@@ -32,6 +33,7 @@ if ($_POST['submit']){
             ';
             unset($_SESSION['error']);
             unset($_SESSION['email']);
+            unset($_SESSION['uname']);
         }
     }
     else{

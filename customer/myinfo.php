@@ -57,8 +57,6 @@ if (!isset($_SESSION['cusid'])) {
                     <input type="text" name="fname" value="<?php echo $row['cus_name']?>" class="form-control" readonly>
                     <label>นามสกุล</label>
                     <input type="text" name="lname" value="<?php echo $row['cus_lname']?>" class="form-control" readonly>
-                    <label>username</label>
-                    <input type="text" name="username" value="<?php echo $row['cus_uname']?>" class="form-control" id="username" readonly>
                     <?php
                     // เช็คเพศแล้วกำหนด checked ให้กับ input tag ตามค่าที่ได้จากฐานข้อมูล
                     switch ($gender) {

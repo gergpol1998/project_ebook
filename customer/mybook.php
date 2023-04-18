@@ -41,7 +41,7 @@ if (!isset($_SESSION['cusid'])) {
         </h4>
         <div class="mb-3">
             <a href="shelf.php"><button type="button" class="btn btn-outline-success">ยังไม่ได้เป็นเจ้าของ</button></a>
-            <a href="mybook.php"><button type="button" class="btn btn-outline-success">เป็นเจ้าของ</button></a>
+            <a href="mybook.php"><button type="button" class="btn btn-success">เป็นเจ้าของ</button></a>
         </div>
         <?php
             $sqlbook = "select *
@@ -66,13 +66,13 @@ if (!isset($_SESSION['cusid'])) {
                 ?>
                 <!-- Button trigger modal -->
                 <a href='readbook.php?bookid=<?php echo $row['book_id']?>'><button class='btn btn-danger'>อ่าน</button></a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">รายละเอียด</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#<?php echo $row['book_id'] ?>">เรื่องย่อ</button>
                 <!-- Modal -->
                 <div class="modal fade" id="<?php echo $row['book_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">รายละเอียด</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">เรื่องย่อ</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -81,7 +81,7 @@ if (!isset($_SESSION['cusid'])) {
                             echo "<h5>ชื่อเรื่อง</h5>";
                             echo "<h4>".$row['book_name']."</h4>";
                             echo "<h5>เนื้อเรื่องย่อ</h5>";
-                            echo "<p>".$row['book_summary']."</p>";
+                            echo "<textarea class='form-control'>" . $row['book_summary'] . "</textarea>";
                             echo "<h5>ผู้เผยแพร่</h5>";
                             echo "<h4>".$row['pub_name']."</h4>";
                         ?>

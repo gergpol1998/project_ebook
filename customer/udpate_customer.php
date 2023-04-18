@@ -8,15 +8,13 @@ if ($_POST['submit']){
     $cusid = $_POST['id'];
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
-    $username = $_POST['username'];
-    $password = $_POST['password'];
     $password = hash('sha512',$password);
     $gender = $_POST['gender'];
     $email = $_POST['email'];
     $bdate = $_POST['bdate'];
     $tel = $_POST['tel'];
 
-    $sqlup_cus = "update customer set cus_uname = '$username',cus_pass = '$password',cus_name = '$fname',
+    $sqlup_cus = "update customer set cus_name = '$fname',
     cus_lname = '$lname',cus_sex = '$gender',cus_bdate = '$bdate',cus_tel = '$tel',cus_email = '$email'
     where cus_id = '$cusid'";
     $result = connectdb()->query($sqlup_cus);
