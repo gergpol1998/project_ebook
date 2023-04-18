@@ -237,7 +237,7 @@ if (!isset($_SESSION['cusid'])) {
                 if ($sqlbook->num_rows > 0) {
 
                     //show ในหน้า pdf
-                    $tableh1 = '
+                    $tableh1 .= '
                     <h3>วันที่พิมพ์รายงาน '.date("d/m/Y").'</h3>
                     <h2 style="text-align:center">รายการหนังสือขายดี</h2>
 
@@ -312,7 +312,7 @@ if (!isset($_SESSION['cusid'])) {
         }
         connectdb()->close();
         //ปิด tag
-        $tableend1 = "</tbody>
+        $tableend1 .= "</tbody>
         </table>";
         $mpdf->WriteHTML($tableh1);
 

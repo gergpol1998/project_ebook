@@ -9,29 +9,59 @@ if (isset($_GET['bookid'])) {
         if($sqlbook->num_rows > 0){
             $row = $sqlbook->fetch_assoc();
         }
-} 
-?>
-<!DOCTYPE html>
-<html lang="en">
+}
+require_once __DIR__ . '/vendor/autoload.php';
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>testread</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+$mpdf = new \Mpdf\Mpdf();
 
-</head>
+$defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
+$fontDirs = $defaultConfig['fontDir'];
 
-<body class="mb-3">
-    <div class="text-center">
-    <h1 class="text-center"><?php echo $row['book_name']?></h1>
-    <embed src="<?php echo $row['book_test']?>#toolbar=0" height="100%" width="100%"/>
-    </div>
-</body>
-<?php
+$defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
+$fontData = $defaultFontConfig['fontdata'];
+$mpdf = new \Mpdf\Mpdf([
+    'mode' => 'utf-8',
+    'format' => 'A4',
+    'margin_left' => 15,
+    'margin_right' => 15,
+    'margin_top' => 16,
+    'margin_bottom' => 16,
+    'margin_header' => 9,
+    'margin_footer' => 9,
+    'mirrorMargins' => true,
+
+    'fontDir' => array_merge($fontDirs, [
+        __DIR__ . 'vendor/mpdf/mpdf/custom/font/directory',
+    ]),
+    'fontdata' => $fontData + [
+        'thsarabun' => [
+            'R' => 'THSarabunNew.ttf',
+            'I' => 'THSarabunNew Italic.ttf',
+            'B' => 'THSarabunNew Bold.ttf',
+            'U' => 'THSarabunNew BoldItalic.ttf'
+        ]
+    ],
+    'default_font' => 'thsarabun',
+    'defaultPageNumStyle' => 1
+]);
+
+$mpdf->SetTitle($row['book_name']); // กำหนดชื่อไฟล์ PDF ตามชื่อเรื่อง
+
+$mpdf->SetWatermarkText('MUTEBOOK');
+$mpdf->showWatermarkText = true; // ต้องเปิดใช้ showWatermarkText ก่อน
+$mpdf->watermarkTextAlpha = 0.5; // กำหนดค่า opacity ของ watermark
+
+$pagecount = $mpdf->SetSourceFile($row['book_test']);
+
+
+for ($i = 1; $i <= $pagecount; $i++) {
+    $tplId = $mpdf->ImportPage($i);
+    $mpdf->UseTemplate($tplId);
+    $mpdf->SetDisplayMode('real');
+    if ($i !== $pagecount){
+        $mpdf->AddPage();
+    }
+}
+$mpdf->Output();
 connectdb()->close();
 ?>
-</html>
